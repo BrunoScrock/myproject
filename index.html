@@ -12,8 +12,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,500,0,0">
 
-  <script type="module" crossorigin src="./assets/index-CjzfaOXL.js"></script>
-  <link rel="stylesheet" crossorigin href="./assets/index-B5UBOrPp.css">
+  <script type="module" crossorigin src="./assets/index-Bwp-QCRJ.js"></script>
+  <link rel="stylesheet" crossorigin href="./assets/index-DD9S1ipw.css">
 </head>
 <body>
 
@@ -100,8 +100,8 @@
                 <button class="tab-btn" data-tab="tab-horas">
                     <span class="material-symbols-rounded">schedule</span> Conversor de Horas
                 </button>
-                <button class="tab-btn" data-tab="tab-auditoria">
-                    <span class="material-symbols-rounded">history</span> Auditoria
+                <button class="tab-btn" data-tab="tab-termo">
+                    <span class="material-symbols-rounded">description</span> Termo de Recebimento
                 </button>
             </div>
         </nav>
@@ -353,6 +353,165 @@
                     <div id="audit-count" class="audit-count"></div>
                     <div id="audit-list" class="audit-list"></div>
                     <div id="audit-empty" class="audit-empty" style="display: none;">Carregando auditoria...</div>
+                </div>
+            </div>
+
+            <!-- TAB: TERMO DE RECEBIMENTO DEFINITIVO -->
+            <div id="tab-termo" class="tab-content">
+                <div class="content-card">
+                    <h1>Termo de Recebimento Definitivo</h1>
+                    <p class="tab-description">
+                        Gere o Termo de Recebimento Definitivo do Contrato nº 6852/2025 (PGE × CELEPAR)
+                        com prévia em tempo real e exportação em PDF.
+                    </p>
+
+                    <div class="trd-toolbar">
+                        <button id="trd-btn-preview" class="epro-btn-aplicar">
+                            <span class="material-symbols-rounded">refresh</span> Atualizar Prévia
+                        </button>
+                        <button id="trd-btn-pdf" class="btn-copy">
+                            <span class="material-symbols-rounded">picture_as_pdf</span> Gerar PDF
+                        </button>
+                        <button id="trd-btn-clear" class="btn-delete">
+                            <span class="material-symbols-rounded">delete_sweep</span> Limpar Formulário
+                        </button>
+                    </div>
+
+                    <div class="trd-layout">
+                        <!-- COLUNA FORMULARIO -->
+                        <div class="trd-form">
+
+                            <div class="trd-form-section">
+                                <h3>Identificação do Contrato</h3>
+                                <div class="trd-field">
+                                    <label>Contrato</label>
+                                    <input type="text" id="trd-contrato" value="CONTRATO Nº 6852/2025" disabled>
+                                </div>
+                                <div class="trd-field">
+                                    <label>Contratante</label>
+                                    <input type="text" id="trd-contratante" value="PROCURADORIA-GERAL DO ESTADO" disabled>
+                                </div>
+                                <div class="trd-field">
+                                    <label>Contratado</label>
+                                    <input type="text" id="trd-contratado" value="CELEPAR" disabled>
+                                </div>
+                                <div class="trd-field">
+                                    <label>Objeto do Contrato</label>
+                                    <textarea id="trd-objeto" rows="3" disabled>Soluções contínuas de Tecnologia da Informação e Comunicação (TIC), para Serviços de Telefonia Digital Celepar - TDC.</textarea>
+                                </div>
+                                <div class="trd-field">
+                                    <label>Comissão de Recebimento</label>
+                                    <textarea id="trd-comissao" rows="4" disabled>Bruno Batista Scrock - Assessor
+Alan Ferreira de Oliveira - Profissional de Tecnologia da Informação
+Comissão de Recebimento - Portaria nº 081/2025-PGE</textarea>
+                                </div>
+                            </div>
+
+                            <div class="trd-form-section">
+                                <h3>Dados do Recebimento</h3>
+                                <div class="trd-field">
+                                    <label>Data do Recebimento</label>
+                                    <input type="date" id="trd-data-recebimento">
+                                </div>
+                                <div class="trd-field">
+                                    <label>Período (mês/período)</label>
+                                    <input type="text" id="trd-periodo" placeholder="Ex: Julho/Agosto" value="Julho/Agosto">
+                                </div>
+                                <div class="trd-field-row">
+                                    <div class="trd-field">
+                                        <label>Data Inicial</label>
+                                        <input type="date" id="trd-data-inicio">
+                                    </div>
+                                    <div class="trd-field">
+                                        <label>Data Final</label>
+                                        <input type="date" id="trd-data-fim">
+                                    </div>
+                                </div>
+                                <div class="trd-field">
+                                    <label>Descrição da Entrega <span class="trd-hint">(gerada automaticamente, mas editável)</span></label>
+                                    <textarea id="trd-descricao" rows="3" placeholder="Descrição automática será gerada..."></textarea>
+                                </div>
+                            </div>
+
+                            <div class="trd-form-section">
+                                <div class="trd-section-head">
+                                    <h3>Itens de Volumes e Valores</h3>
+                                    <label class="checkbox-item">
+                                        <input type="checkbox" id="trd-autocalc" checked>
+                                        Calcular totais automaticamente
+                                    </label>
+                                </div>
+                                <table class="trd-edit-table" id="trd-itens-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Nº</th>
+                                            <th>Descrição</th>
+                                            <th>Und.</th>
+                                            <th>Qtd</th>
+                                            <th>Valor Unit.</th>
+                                            <th>Valor Total</th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="trd-itens-tbody"></tbody>
+                                    <tfoot>
+                                        <tr>
+                                            <td colspan="5" class="trd-total-label">TOTAL GERAL</td>
+                                            <td id="trd-total-geral" class="trd-total-value">R$ 0,00</td>
+                                            <td></td>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+                                <button id="trd-add-item" class="btn-add-field">
+                                    <span class="material-symbols-rounded">add</span> Adicionar Item
+                                </button>
+                            </div>
+
+                            <div class="trd-form-section">
+                                <div class="trd-section-head">
+                                    <h3>Medição de Resultados</h3>
+                                </div>
+                                <table class="trd-edit-table" id="trd-indicadores-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Indicador</th>
+                                            <th>Resultado</th>
+                                            <th>Meta</th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="trd-indicadores-tbody"></tbody>
+                                </table>
+                                <button id="trd-add-indicador" class="btn-add-field">
+                                    <span class="material-symbols-rounded">add</span> Adicionar Indicador
+                                </button>
+                            </div>
+
+                            <div class="trd-form-section">
+                                <h3>Conferência e Avaliação</h3>
+                                <div class="trd-field">
+                                    <label>Status da Conferência</label>
+                                    <select id="trd-conferencia-status">
+                                        <option value="RECEBI CONFORME">RECEBI CONFORME</option>
+                                        <option value="RECEBI COM RESSALVAS">RECEBI COM RESSALVAS</option>
+                                    </select>
+                                </div>
+                                <div class="trd-field">
+                                    <label>Ressalvas (se houver)</label>
+                                    <textarea id="trd-ressalvas" rows="3" placeholder="Sem ressalvas.">Sem ressalvas.</textarea>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <!-- COLUNA PREVIA -->
+                        <div class="trd-preview">
+                            <div class="trd-preview-label">Prévia do Termo (A4)</div>
+                            <div class="trd-preview-sheet" id="trd-preview-sheet">
+                                <div id="trd-document" class="trd-document"></div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
 
