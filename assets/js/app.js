@@ -63,6 +63,17 @@ function setupEventListeners() {
         });
     });
 
+    const scrollTopBtn = document.getElementById('btn-scroll-top');
+    if (scrollTopBtn) {
+        scrollTopBtn.addEventListener('click', () => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+        window.addEventListener('scroll', () => {
+            const show = window.scrollY > 300;
+            scrollTopBtn.classList.toggle('visible', show);
+        }, { passive: true });
+    }
+
     document.getElementById('btn-logout')?.addEventListener('click', async () => {
         if (confirm('Tem certeza que deseja sair?')) {
             await signOut();
