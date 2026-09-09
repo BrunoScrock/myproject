@@ -1,11 +1,10 @@
-import { initAuth, signInWithGoogle, signOut, getCurrentUser as getAuthUser } from './auth.js';
+import { initAuth, setAuthCallback, signInWithGoogle, signOut, getCurrentUser as getAuthUser } from './auth.js';
 import { loadTasks, renderTasks, addNewTaskField } from './tasks.js';
 import { loadScheduledTasks, renderScheduledTasks, addScheduledTask } from './scheduled-tasks.js';
 import { loadFixedNotes, renderFixedNotes, showFixedNoteForm, hideFixedNoteForm, saveFixedNote } from './fixed-notes.js';
 import { mudarCategoriaEprotocolo, formatarNome, gerarEprotocolo, limparEprotocolo, copiarEprotocolo } from './eprotocolo.js';
 import { aprimorarTextoJuridico, copiarJuridico, limparJuridico } from './juridico.js';
 import { checkMigrationNeeded, showMigrationModal } from './migration.js';
-import { onAuthStateChange } from './supabase.js';
 
 function showScreen(screenId) {
     ['login-screen', 'loading-screen', 'app-screen'].forEach(id => {
@@ -173,20 +172,32 @@ window.addEventListener('DOMContentLoaded', () => {
     loadTheme();
     showScreen('loading-screen');
 
-    initAuth();
-
-    onAuthStateChange(async (user, event) => {
-        if (event === 'authorized' && user) {
-            await initApp(user);
-        } else if (event === 'unauthorized') {
+    setAuthCallback((user, status) => {
+        if (status === 'authorized' && user) {
+            initApp(user);
+        } else if (status === 'unauthorized') {
             showScreen('login-screen');
             alert('Esta conta Google não está autorizada a acessar o sistema.');
-        } else if (event === 'signed_out') {
+        } else if (status === 'signed_out') {
             showScreen('login-screen');
         }
     });
 
+    try {
+        initAuth();
+    } catch (err) {
+        console.error('Erro ao iniciar autenticação:', err);
+        showScreen('login-screen');
+        alert('Não foi possível conectar ao servidor de autenticação.');
+    }
+
     setupEventListeners();
+
+    setTimeout(() => {
+        if (document.getElementById('app-screen').style.display !== 'flex') {
+            showScreen('login-screen');
+        }
+    }, 5000);
 
     setInterval(() => {
         if (getAuthUser()) {

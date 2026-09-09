@@ -14,10 +14,13 @@ export function getCurrentUser() {
 
 export async function signInWithGoogle() {
     const supabase = getSupabase();
+    let redirectTo = window.location.origin + window.location.pathname;
+    if (!redirectTo.endsWith('/')) redirectTo += '/';
+
     const { error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: {
-            redirectTo: window.location.origin + window.location.pathname
+            redirectTo
         }
     });
     if (error) {
