@@ -3,7 +3,7 @@ import { loadTasks, renderTasks, addNewTaskField } from './tasks.js';
 import { loadScheduledTasks, renderScheduledTasks, addScheduledTask } from './scheduled-tasks.js';
 import { loadFixedNotes, renderFixedNotes, showFixedNoteForm, hideFixedNoteForm, saveFixedNote } from './fixed-notes.js';
 import { mudarCategoriaEprotocolo, formatarNome, gerarEprotocolo, limparEprotocolo, copiarEprotocolo } from './eprotocolo.js';
-import { aprimorarTextoJuridico, copiarJuridico, limparJuridico } from './juridico.js';
+import { normalParaDecimal, decimalParaNormal } from './hours.js';
 import { checkMigrationNeeded, showMigrationModal } from './migration.js';
 
 function showScreen(screenId) {
@@ -16,18 +16,13 @@ function showScreen(screenId) {
 function updateUserInfo(user) {
     const nameEl = document.getElementById('user-name');
     const avatarEl = document.getElementById('user-avatar');
-    const avatarSmall = document.getElementById('user-avatar-small');
 
     if (user) {
         const displayName = user.user_metadata?.full_name || user.email;
-        if (nameEl) nameEl.textContent = displayName;
+        if (nameEl) nameEl.textContent = displayName.split(' ')[0] + (displayName.split(' ').length > 1 ? ' ' + displayName.split(' ').slice(-1)[0] : '');
         if (avatarEl && user.user_metadata?.avatar_url) {
             avatarEl.src = user.user_metadata.avatar_url;
             avatarEl.style.display = 'block';
-        }
-        if (avatarSmall && user.user_metadata?.avatar_url) {
-            avatarSmall.src = user.user_metadata.avatar_url;
-            avatarSmall.style.display = 'block';
         }
     }
 }
@@ -89,9 +84,12 @@ function setupEventListeners() {
     document.getElementById('btn-format-name')?.addEventListener('click', () => formatarNome('epro-nome'));
     document.getElementById('btn-format-name-ausencia')?.addEventListener('click', () => formatarNome('epro-nome-ausencia'));
 
-    document.getElementById('btn-apply-juridico')?.addEventListener('click', aprimorarTextoJuridico);
-    document.getElementById('btn-copy-juridico')?.addEventListener('click', copiarJuridico);
-    document.getElementById('btn-clear-juridico')?.addEventListener('click', limparJuridico);
+    document.getElementById('horas-normal')?.addEventListener('input', atualizarConversaoHoras);
+    document.getElementById('horas-decimal')?.addEventListener('input', atualizarConversaoHoras);
+    document.getElementById('btn-copy-horas-normal')?.addEventListener('click', () => copiarResultadoHoras('horas-normal-result'));
+    document.getElementById('btn-copy-horas-decimal')?.addEventListener('click', () => copiarResultadoHoras('horas-decimal-result'));
+    document.getElementById('btn-clear-horas-normal')?.addEventListener('click', () => limparConversao('horas-normal', 'horas-normal-result'));
+    document.getElementById('btn-clear-horas-decimal')?.addEventListener('click', () => limparConversao('horas-decimal', 'horas-decimal-result'));
 
     document.getElementById('btn-apply-remover')?.addEventListener('click', aplicarRemocao);
     document.getElementById('btn-copy-remover')?.addEventListener('click', copiarRemocao);
@@ -161,6 +159,67 @@ function limparRemocao() {
     document.getElementById('remover-input').value = '';
     document.getElementById('remover-output-box').style.display = 'none';
     document.getElementById('remover-output-text').innerText = '';
+}
+
+function atualizarConversaoHoras() {
+    const normalResultEl = document.getElementById('horas-normal-result');
+    const decimalResultEl = document.getElementById('horas-decimal-result');
+
+    const normalInput = document.getElementById('horas-normal').value;
+    const decimalInput = document.getElementById('horas-decimal').value;
+
+    if (normalInput) {
+        const resultado = normalParaDecimal(normalInput);
+        if (resultado === null) {
+            normalResultEl.textContent = 'Formato inválido';
+            normalResultEl.classList.add('invalid');
+        } else {
+            normalResultEl.textContent = resultado;
+            normalResultEl.classList.remove('invalid');
+        }
+    } else {
+        normalResultEl.textContent = '—';
+        normalResultEl.classList.remove('invalid');
+    }
+
+    if (decimalInput) {
+        const resultado = decimalParaNormal(decimalInput);
+        if (resultado === null) {
+            decimalResultEl.textContent = 'Formato inválido';
+            decimalResultEl.classList.add('invalid');
+        } else {
+            decimalResultEl.textContent = resultado;
+            decimalResultEl.classList.remove('invalid');
+        }
+    } else {
+        decimalResultEl.textContent = '—';
+        decimalResultEl.classList.remove('invalid');
+    }
+}
+
+function copiarResultadoHoras(resultId) {
+    const resultEl = document.getElementById(resultId);
+    const texto = resultEl.innerText;
+    if (!texto || texto === '—' || texto === 'Formato inválido') return;
+
+    navigator.clipboard.writeText(texto).then(() => {
+        const copyBtn = resultEl.closest('.hours-card').querySelector('.btn-copy');
+        const originalHtml = copyBtn.innerHTML;
+        const originalColor = copyBtn.style.backgroundColor;
+        copyBtn.innerHTML = '<span class="material-symbols-rounded">check</span> Copiado!';
+        copyBtn.style.backgroundColor = 'var(--success-color)';
+        setTimeout(() => {
+            copyBtn.innerHTML = originalHtml;
+            copyBtn.style.backgroundColor = originalColor;
+        }, 1500);
+    });
+}
+
+function limparConversao(inputId, resultId) {
+    document.getElementById(inputId).value = '';
+    const resultEl = document.getElementById(resultId);
+    resultEl.textContent = '—';
+    resultEl.classList.remove('invalid');
 }
 
 window.autoGrow = function (element) {

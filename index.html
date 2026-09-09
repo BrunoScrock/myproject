@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sistema de Anotações e E-Protocolo</title>
-    <meta name="description" content="Sistema pessoal de organização de tarefas, anotações e geração de despachos.">
+    <meta name="description" content="Sistema pessoal de organização de tarefas, anotações, geração de despachos e conversão de horas.">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -21,7 +21,7 @@
             <span class="material-symbols-rounded login-icon">lock_open</span>
             <h1>Sistema de Anotações</h1>
             <div class="login-subtitle">E-Protocolo</div>
-            <p>Organize suas tarefas, anotações e despachos de forma simples e segura.</p>
+            <p>Organize suas tarefas, anotações, despachos e horas de trabalho de forma simples e segura.</p>
             <button id="btn-google-login" class="btn-google-login" aria-label="Entrar com Google">
                 <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                     <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 01-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z" fill="#4285F4"/>
@@ -43,45 +43,22 @@
     </div>
 
     <!-- TELA PRINCIPAL -->
-    <div id="app-screen" class="screen">
-        <div class="main-wrapper">
+    <div id="app-screen" class="screen app-screen">
 
-            <!-- SIDEBAR -->
-            <div class="sidebar">
-                <div class="user-bar">
-                    <div class="user-info">
-                        <img id="user-avatar-small" class="user-avatar" src="" alt="Avatar">
-                        <span id="user-name" class="user-name"></span>
-                    </div>
-                    <button id="btn-logout" class="btn-logout" title="Sair da conta">
-                        <span class="material-symbols-rounded">logout</span> Sair
-                    </button>
-                </div>
-
-                <h2 style="margin-top: 0; text-align: left; font-size: 18px; margin-bottom: 15px;">Removedor de Caracteres</h2>
-                <p style="font-size: 13px; color: var(--muted-text); margin-top: 0; margin-bottom: 15px; line-height: 1.4;">
-                    Remove pontos, hífens e símbolos. Útil para limpar números de processos, CPF, CNPJ, etc.
-                </p>
-                <textarea id="remover-input" placeholder="Cole seu texto aqui (ex: 123.456.789-00)" rows="4" oninput="autoGrow(this)"></textarea>
-                <button id="btn-apply-remover" class="btn-save" style="margin-top: 10px;">
-                    <span class="material-symbols-rounded">filter_alt</span> Aplicar Limpeza
-                </button>
-                <div id="remover-output-box" class="output-box" style="margin-top: 20px;">
-                    <div id="remover-output-text" class="output-text" style="word-break: break-all;"></div>
-                    <div style="display: flex; gap: 10px; margin-top: 5px;">
-                        <button id="btn-copy-remover" class="btn-copy" style="flex: 1;">
-                            <span class="material-symbols-rounded">content_copy</span> Copiar
-                        </button>
-                        <button id="btn-clear-remover" class="btn-delete" style="flex: 1;">
-                            <span class="material-symbols-rounded">delete</span>
-                        </button>
+        <!-- CABECALHO -->
+        <header class="app-header">
+            <div class="header-inner">
+                <div class="brand">
+                    <span class="brand-icon">
+                        <span class="material-symbols-rounded">gavel</span>
+                    </span>
+                    <div class="brand-text">
+                        <span class="brand-title">Sistema de Anotações</span>
+                        <span class="brand-subtitle">E-Protocolo</span>
                     </div>
                 </div>
-            </div>
 
-            <!-- CONTAINER PRINCIPAL -->
-            <div class="container">
-                <div class="header-top">
+                <div class="header-actions">
                     <div class="notification-area" id="bell-area">
                         <span class="material-symbols-rounded">notifications</span>
                         <span class="badge" id="notification-badge">0</span>
@@ -90,25 +67,44 @@
                             <div id="dropdown-content"></div>
                         </div>
                     </div>
-                    <button id="theme-toggle" class="btn-theme">
+
+                    <button id="theme-toggle" class="btn-theme" title="Alternar tema">
                         <span class="material-symbols-rounded" id="theme-icon">dark_mode</span>
-                        <span id="theme-text">Modo Escuro</span>
                     </button>
-                </div>
 
-                <!-- ABAS -->
-                <div class="tabs">
-                    <button class="tab-btn active" data-tab="tab-tarefas">
-                        <span class="material-symbols-rounded">checklist</span> Tarefas & Anotações
-                    </button>
-                    <button class="tab-btn" data-tab="tab-eprotocolo">
-                        <span class="material-symbols-rounded">gavel</span> E-Protocolo
-                    </button>
+                    <div class="header-user">
+                        <img id="user-avatar" class="user-avatar" src="" alt="Avatar">
+                        <span id="user-name" class="user-name"></span>
+                        <button id="btn-logout" class="btn-logout" title="Sair da conta">
+                            <span class="material-symbols-rounded">logout</span>
+                        </button>
+                    </div>
                 </div>
+            </div>
+        </header>
 
-                <!-- TAB: TAREFAS & ANOTACOES -->
-                <div id="tab-tarefas" class="tab-content active">
-                    <h1 style="margin-top: 0;">Tarefas do Dia</h1>
+        <!-- NAVEGACAO (ABAS) -->
+        <nav class="main-nav" aria-label="Navegação principal">
+            <div class="nav-inner">
+                <button class="tab-btn active" data-tab="tab-tarefas">
+                    <span class="material-symbols-rounded">checklist</span> Tarefas & Anotações
+                </button>
+                <button class="tab-btn" data-tab="tab-eprotocolo">
+                    <span class="material-symbols-rounded">gavel</span> E-Protocolo
+                </button>
+                <button class="tab-btn" data-tab="tab-horas">
+                    <span class="material-symbols-rounded">schedule</span> Conversor de Horas
+                </button>
+            </div>
+        </nav>
+
+        <!-- CONTEUDO PRINCIPAL -->
+        <main class="main-content">
+
+            <!-- TAB: TAREFAS & ANOTACOES -->
+            <div id="tab-tarefas" class="tab-content active">
+                <div class="content-card">
+                    <h1>Tarefas do Dia</h1>
                     <div class="task-list" id="task-list"></div>
                     <button id="add-task-btn" class="btn-add-task">
                         <span class="material-symbols-rounded">add</span> Adicionar Nova Tarefa
@@ -140,10 +136,12 @@
                         <div class="fixed-notes-list" id="fixed-notes-list"></div>
                     </div>
                 </div>
+            </div>
 
-                <!-- TAB: E-PROTOCOLO -->
-                <div id="tab-eprotocolo" class="tab-content">
-                    <h1 style="margin-top: 0;">Gerador de Despachos</h1>
+            <!-- TAB: E-PROTOCOLO -->
+            <div id="tab-eprotocolo" class="tab-content">
+                <div class="content-card">
+                    <h1>Gerador de Despachos</h1>
 
                     <div class="epro-field epro-field-full epro-category-selector">
                         <label for="epro-categoria">Categoria do Despacho</label>
@@ -244,39 +242,113 @@
                             <span class="material-symbols-rounded">content_copy</span> Copiar Texto
                         </button>
                     </div>
+                </div>
+            </div>
 
-                    <hr style="margin: 40px 0;">
-
-                    <!-- APRIMORADOR JURIDICO -->
-                    <h2>Aprimorador Jurídico <span style="font-size: 12px; color: var(--color-btn); vertical-align: middle;">(BETA)</span></h2>
-                    <p style="font-size: 14px; color: var(--muted-text); text-align: center; margin-top: -15px; margin-bottom: 20px;">
-                        Substitui palavras e expressões comuns do dia a dia por linguagem formal (Juridiquês).
+            <!-- TAB: CONVERSOR DE HORAS -->
+            <div id="tab-horas" class="tab-content">
+                <div class="content-card">
+                    <h1>Conversor de Horas</h1>
+                    <p class="tab-description">
+                        Converta entre horário normal (H:MM) e horas decimais, e vice-versa. Útil para cálculos de horas de trabalho.
                     </p>
 
-                    <div class="juridico-box">
-                        <textarea id="juridico-input" class="fixed-note-edit-textarea" placeholder="Ex: Eu quero pedir para mandar o processo agora porque precisa resolver o problema..." oninput="autoGrow(this)"></textarea>
-
-                        <button id="btn-apply-juridico" class="btn-save" style="background-color: var(--color-btn);">
-                            <span class="material-symbols-rounded">auto_awesome</span> Tornar Jurídico
-                        </button>
-
-                        <div id="juridico-output-box" class="output-box" style="margin-top: 15px;">
-                            <div id="juridico-output-text" class="output-text"></div>
-
-                            <div style="display: flex; gap: 10px; margin-top: 15px;">
-                                <button id="btn-copy-juridico" class="btn-copy" style="flex: 1;">
+                    <div class="hours-grid">
+                        <div class="hours-card">
+                            <div class="hours-card-header">
+                                <span class="material-symbols-rounded">schedule</span>
+                                <span>Horas Normais → Decimais</span>
+                            </div>
+                            <p class="hours-hint">Digite no formato <strong>H:MM</strong> ou <strong>H:MM:SS</strong>. Ex: <strong>1:30</strong></p>
+                            <input type="text" id="horas-normal" placeholder="Ex: 1:30" inputmode="numeric">
+                            <div class="hours-result">
+                                <span class="hours-result-label">Resultado</span>
+                                <div id="horas-normal-result" class="hours-result-value">—</div>
+                                <span class="hours-result-unit">horas decimais</span>
+                            </div>
+                            <div class="hours-card-actions">
+                                <button id="btn-copy-horas-normal" class="btn-copy">
                                     <span class="material-symbols-rounded">content_copy</span> Copiar
                                 </button>
-                                <button id="btn-clear-juridico" class="btn-delete" style="flex: 1;">
-                                    <span class="material-symbols-rounded">clear_all</span> Limpar
+                                <button id="btn-clear-horas-normal" class="btn-delete" title="Limpar">
+                                    <span class="material-symbols-rounded">delete</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="hours-card">
+                            <div class="hours-card-header">
+                                <span class="material-symbols-rounded">numbers</span>
+                                <span>Horas Decimais → Normais</span>
+                            </div>
+                            <p class="hours-hint">Digite o valor decimal usando <strong>ponto</strong> ou <strong>vírgula</strong>. Ex: <strong>1,5</strong></p>
+                            <input type="text" id="horas-decimal" placeholder="Ex: 1,5" inputmode="decimal">
+                            <div class="hours-result">
+                                <span class="hours-result-label">Resultado</span>
+                                <div id="horas-decimal-result" class="hours-result-value">—</div>
+                                <span class="hours-result-unit">horário normal (H:MM)</span>
+                            </div>
+                            <div class="hours-card-actions">
+                                <button id="btn-copy-horas-decimal" class="btn-copy">
+                                    <span class="material-symbols-rounded">content_copy</span> Copiar
+                                </button>
+                                <button id="btn-clear-horas-decimal" class="btn-delete" title="Limpar">
+                                    <span class="material-symbols-rounded">delete</span>
                                 </button>
                             </div>
                         </div>
                     </div>
 
+                    <div class="hours-info">
+                        <span class="material-symbols-rounded">info</span>
+                        <span>
+                            <strong>Exemplos:</strong> 90 minutos = <strong>1:30</strong> = <strong>1,50</strong> h &nbsp;·&nbsp;
+                            2 horas e 15 minutos = <strong>2:15</strong> = <strong>2,25</strong> h
+                        </span>
+                    </div>
                 </div>
             </div>
-        </div>
+
+        </main>
+
+        <!-- RODAPE -->
+        <footer class="app-footer">
+            <div class="footer-inner">
+
+                <div class="footer-tools">
+                    <div class="tool-card">
+                        <div class="tool-card-header">
+                            <span class="material-symbols-rounded">filter_alt</span>
+                            <div>
+                                <h3>Removedor de Caracteres</h3>
+                                <p>Remove pontos, hífens e símbolos. Útil para limpar números de processos, CPF, CNPJ etc.</p>
+                            </div>
+                        </div>
+                        <textarea id="remover-input" placeholder="Cole seu texto aqui (ex: 123.456.789-00)" rows="2" oninput="autoGrow(this)"></textarea>
+                        <button id="btn-apply-remover" class="btn-save" style="margin-top: 10px;">
+                            <span class="material-symbols-rounded">filter_alt</span> Aplicar Limpeza
+                        </button>
+                        <div id="remover-output-box" class="output-box" style="margin-top: 15px;">
+                            <div id="remover-output-text" class="output-text" style="word-break: break-all;"></div>
+                            <div style="display: flex; gap: 10px; margin-top: 5px;">
+                                <button id="btn-copy-remover" class="btn-copy" style="flex: 1;">
+                                    <span class="material-symbols-rounded">content_copy</span> Copiar
+                                </button>
+                                <button id="btn-clear-remover" class="btn-delete" style="flex: 1;">
+                                    <span class="material-symbols-rounded">delete</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="footer-bar">
+                    <span class="footer-brand">Sistema de Anotações e E-Protocolo</span>
+                    <span class="footer-meta">Uso pessoal · v1.2.0</span>
+                </div>
+            </div>
+        </footer>
+
     </div>
 
     <!-- MIGRATION MODAL -->

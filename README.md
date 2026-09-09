@@ -8,7 +8,7 @@ Sistema pessoal web para organização de tarefas, anotações e geração de de
 - **Tarefas Agendadas** - Programe tarefas com data final e receba notificações
 - **Anotações Fixas** - Mantenha anotações importantes organizadas com cores
 - **Gerador de Despachos** - Gere despachos para Liberação de Sistema e Ausência de Perfil
-- **Aprimorador Jurídico** - Converta texto informal em linguagem formal/jurídica
+- **Conversor de Horas** - Converta entre horário normal (H:MM) e horas decimais, e vice-versa
 - **Removedor de Caracteres** - Limpe números, CPFs, processos etc.
 - **Modo Claro/Escuro** - Tema personalizável
 - **Autenticação Google** - Login seguro via Supabase Auth
@@ -112,7 +112,7 @@ sistema-anotacoes-eprotocolo/
 │   │   ├── scheduled-tasks.js
 │   │   ├── fixed-notes.js
 │   │   ├── eprotocolo.js
-│   │   ├── juridico.js
+│   │   ├── hours.js
 │   │   ├── migration.js
 │   │   └── app.js
 │   └── icons/
