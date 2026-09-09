@@ -58,6 +58,11 @@
                 </div>
 
                 <div class="header-actions">
+                    <button id="btn-open-auditoria" class="btn-auditoria" title="Histórico de Auditoria">
+                        <span class="material-symbols-rounded">history_edu</span>
+                        <span class="btn-auditoria-label">Auditoria</span>
+                    </button>
+
                     <div class="notification-area" id="bell-area">
                         <span class="material-symbols-rounded">notifications</span>
                         <span class="badge" id="notification-badge">0</span>
@@ -93,6 +98,9 @@
                 </button>
                 <button class="tab-btn" data-tab="tab-horas">
                     <span class="material-symbols-rounded">schedule</span> Conversor de Horas
+                </button>
+                <button class="tab-btn" data-tab="tab-auditoria">
+                    <span class="material-symbols-rounded">history</span> Auditoria
                 </button>
             </div>
         </nav>
@@ -305,6 +313,45 @@
                             2 horas e 15 minutos = <strong>2:15</strong> = <strong>2,25</strong> h
                         </span>
                     </div>
+                </div>
+            </div>
+
+            <!-- TAB: AUDITORIA -->
+            <div id="tab-auditoria" class="tab-content">
+                <div class="content-card">
+                    <h1>Auditoria do Sistema</h1>
+                    <p class="tab-description">
+                        Histórico completo de tudo que foi criado, alterado ou excluído no sistema —
+                        com os dados antigos e novos de cada operação.
+                    </p>
+
+                    <div class="audit-filters">
+                        <select id="audit-filter-table" aria-label="Filtrar por tabela">
+                            <option value="">Todas as tabelas</option>
+                            <option value="tasks">Tarefas do Dia</option>
+                            <option value="scheduled_tasks">Tarefas Agendadas</option>
+                            <option value="fixed_notes">Anotações Fixas</option>
+                            <option value="dispatch_templates">Modelos de Despacho</option>
+                            <option value="dispatch_history">Histórico de Despachos</option>
+                        </select>
+                        <select id="audit-filter-operation" aria-label="Filtrar por operação">
+                            <option value="">Todas as operações</option>
+                            <option value="INSERT">Criação</option>
+                            <option value="UPDATE">Alteração</option>
+                            <option value="DELETE">Exclusão</option>
+                        </select>
+                        <input type="text" id="audit-search" placeholder="Buscar no conteúdo...">
+                        <button id="btn-audit-clear" class="btn-delete btn-icon-only" title="Limpar filtros">
+                            <span class="material-symbols-rounded">filter_alt_off</span>
+                        </button>
+                        <button id="btn-audit-refresh" class="btn-copy" title="Atualizar">
+                            <span class="material-symbols-rounded">refresh</span> Atualizar
+                        </button>
+                    </div>
+
+                    <div id="audit-count" class="audit-count"></div>
+                    <div id="audit-list" class="audit-list"></div>
+                    <div id="audit-empty" class="audit-empty" style="display: none;">Carregando auditoria...</div>
                 </div>
             </div>
 

@@ -87,6 +87,24 @@ CREATE INDEX IF NOT EXISTS idx_dispatch_history_user_id ON dispatch_history(user
 CREATE INDEX IF NOT EXISTS idx_dispatch_history_created_at ON dispatch_history(user_id, created_at DESC);
 
 -- =============================================
+-- TABELA: audit_log (Auditoria do Sistema)
+-- =============================================
+CREATE TABLE IF NOT EXISTS audit_log (
+    id BIGSERIAL PRIMARY KEY,
+    table_name TEXT NOT NULL,
+    record_id UUID,
+    operation TEXT NOT NULL CHECK (operation IN ('INSERT', 'UPDATE', 'DELETE')),
+    old_data JSONB,
+    new_data JSONB,
+    user_id UUID REFERENCES auth.users(id),
+    created_at TIMESTAMPTZ DEFAULT now()
+);
+
+CREATE INDEX IF NOT EXISTS idx_audit_log_created ON audit_log(created_at DESC);
+CREATE INDEX IF NOT EXISTS idx_audit_log_table ON audit_log(table_name, created_at DESC);
+CREATE INDEX IF NOT EXISTS idx_audit_log_record ON audit_log(record_id);
+
+-- =============================================
 -- FUNCAO: updated_at trigger
 -- =============================================
 CREATE OR REPLACE FUNCTION update_updated_at_column()
@@ -111,6 +129,60 @@ CREATE TRIGGER update_dispatch_templates_updated_at BEFORE UPDATE ON dispatch_te
     FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
 
 -- =============================================
+-- TRIGGERS DE AUDITORIA (historico de tudo que ja foi salvo)
+-- =============================================
+CREATE OR REPLACE FUNCTION audit_trigger_func()
+RETURNS TRIGGER AS $$
+DECLARE
+    record_id_value UUID;
+BEGIN
+    IF TG_OP = 'DELETE' THEN
+        record_id_value := OLD.id;
+    ELSE
+        record_id_value := NEW.id;
+    END IF;
+
+    INSERT INTO audit_log (
+        table_name,
+        record_id,
+        operation,
+        old_data,
+        new_data,
+        user_id
+    ) VALUES (
+        TG_TABLE_NAME,
+        record_id_value,
+        TG_OP,
+        CASE WHEN TG_OP IN ('UPDATE', 'DELETE') THEN to_jsonb(OLD) ELSE NULL END,
+        CASE WHEN TG_OP IN ('INSERT', 'UPDATE') THEN to_jsonb(NEW) ELSE NULL END,
+        auth.uid()
+    );
+
+    RETURN COALESCE(NEW, OLD);
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+CREATE TRIGGER audit_tasks
+    AFTER INSERT OR UPDATE OR DELETE ON tasks
+    FOR EACH ROW EXECUTE FUNCTION audit_trigger_func();
+
+CREATE TRIGGER audit_scheduled_tasks
+    AFTER INSERT OR UPDATE OR DELETE ON scheduled_tasks
+    FOR EACH ROW EXECUTE FUNCTION audit_trigger_func();
+
+CREATE TRIGGER audit_fixed_notes
+    AFTER INSERT OR UPDATE OR DELETE ON fixed_notes
+    FOR EACH ROW EXECUTE FUNCTION audit_trigger_func();
+
+CREATE TRIGGER audit_dispatch_templates
+    AFTER INSERT OR UPDATE OR DELETE ON dispatch_templates
+    FOR EACH ROW EXECUTE FUNCTION audit_trigger_func();
+
+CREATE TRIGGER audit_dispatch_history
+    AFTER INSERT OR UPDATE OR DELETE ON dispatch_history
+    FOR EACH ROW EXECUTE FUNCTION audit_trigger_func();
+
+-- =============================================
 -- ROW LEVEL SECURITY (RLS)
 -- =============================================
 
@@ -119,6 +191,7 @@ ALTER TABLE scheduled_tasks ENABLE ROW LEVEL SECURITY;
 ALTER TABLE fixed_notes ENABLE ROW LEVEL SECURITY;
 ALTER TABLE dispatch_templates ENABLE ROW LEVEL SECURITY;
 ALTER TABLE dispatch_history ENABLE ROW LEVEL SECURITY;
+ALTER TABLE audit_log ENABLE ROW LEVEL SECURITY;
 
 -- =============================================
 -- POLICIES: tasks
@@ -213,4 +286,11 @@ CREATE POLICY "Users can update their own dispatch_history"
 
 CREATE POLICY "Users can delete their own dispatch_history"
     ON dispatch_history FOR DELETE
+    USING (auth.uid() = user_id);
+
+-- =============================================
+-- POLICIES: audit_log (somente leitura)
+-- =============================================
+CREATE POLICY "Users can view their own audit_log"
+    ON audit_log FOR SELECT
     USING (auth.uid() = user_id);

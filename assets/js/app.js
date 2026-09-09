@@ -4,6 +4,7 @@ import { loadScheduledTasks, renderScheduledTasks, addScheduledTask } from './sc
 import { loadFixedNotes, renderFixedNotes, showFixedNoteForm, hideFixedNoteForm, saveFixedNote } from './fixed-notes.js';
 import { mudarCategoriaEprotocolo, formatarNome, gerarEprotocolo, limparEprotocolo, copiarEprotocolo } from './eprotocolo.js';
 import { normalParaDecimal, decimalParaNormal } from './hours.js';
+import { loadAuditLog, renderAuditEntries, resetAuditFilters } from './audit.js';
 import { checkMigrationNeeded, showMigrationModal } from './migration.js';
 
 function showScreen(screenId) {
@@ -69,6 +70,19 @@ function setupEventListeners() {
 
     document.getElementById('theme-toggle')?.addEventListener('click', toggleTheme);
 
+    document.getElementById('btn-open-auditoria')?.addEventListener('click', () => {
+        openTab('tab-auditoria', document.querySelector('.tab-btn[data-tab="tab-auditoria"]'));
+    });
+
+    document.getElementById('audit-filter-table')?.addEventListener('change', renderAuditEntries);
+    document.getElementById('audit-filter-operation')?.addEventListener('change', renderAuditEntries);
+    document.getElementById('audit-search')?.addEventListener('input', () => {
+        clearTimeout(window.__auditSearchDebounce);
+        window.__auditSearchDebounce = setTimeout(renderAuditEntries, 250);
+    });
+    document.getElementById('btn-audit-refresh')?.addEventListener('click', loadAuditLog);
+    document.getElementById('btn-audit-clear')?.addEventListener('click', resetAuditFilters);
+
     document.getElementById('add-task-btn')?.addEventListener('click', addNewTaskField);
     document.getElementById('add-scheduled-btn')?.addEventListener('click', addScheduledTask);
 
@@ -104,7 +118,11 @@ function openTab(tabId, btnElement) {
     document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
     document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
     document.getElementById(tabId)?.classList.add('active');
-    btnElement.classList.add('active');
+    btnElement?.classList.add('active');
+
+    if (tabId === 'tab-auditoria') {
+        loadAuditLog();
+    }
 }
 
 function toggleTheme() {
