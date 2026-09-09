@@ -3,10 +3,11 @@ import { getCurrentUser } from './auth.js';
 
 let tasks = [];
 let saveTimeout = null;
+const dirtyTasks = new Set();
 
 function debounceSave() {
     if (saveTimeout) clearTimeout(saveTimeout);
-    saveTimeout = setTimeout(() => saveAllTasks(), 800);
+    saveTimeout = setTimeout(() => saveChangedTasks(), 800);
 }
 
 export async function loadTasks() {
@@ -70,6 +71,7 @@ export function renderTasks() {
         const textarea = taskDiv.querySelector('textarea');
         textarea.addEventListener('input', () => {
             tasks[index].description = textarea.value;
+            dirtyTasks.add(tasks[index]);
             debounceSave();
         });
     });
@@ -110,6 +112,7 @@ export function deleteTaskField(index) {
 
     renderTasks();
     deleteTaskFromDB(deletedId);
+    tasks.forEach(t => dirtyTasks.add(t));
     debounceSave();
 }
 
@@ -133,48 +136,46 @@ export function clearTask(index) {
         if (typeof autoGrow === 'function') autoGrow(textarea);
     }
     tasks[index].description = '';
+    dirtyTasks.add(tasks[index]);
     debounceSave();
 }
 
-async function saveAllTasks() {
+async function saveChangedTasks() {
     const user = getCurrentUser();
     if (!user) return;
 
+    const pending = Array.from(dirtyTasks);
+    dirtyTasks.clear();
+
     const supabase = getSupabase();
 
-    const toInsert = tasks.filter(t => !t.id).map((t, i) => ({
-        user_id: user.id,
-        description: t.description,
-        position: t.position
-    }));
+    for (const task of pending) {
+        if (!tasks.includes(task)) continue;
 
-    const toUpdate = tasks.filter(t => t.id).map(t => ({
-        id: t.id,
-        description: t.description,
-        position: t.position
-    }));
-
-    if (toInsert.length > 0) {
-        const { data: inserted } = await supabase
-            .from('tasks')
-            .insert(toInsert)
-            .select();
-        if (inserted) {
-            let insertIdx = 0;
-            for (let i = 0; i < tasks.length; i++) {
-                if (!tasks[i].id) {
-                    tasks[i].id = inserted[insertIdx]?.id;
-                    insertIdx++;
-                }
+        if (!task.id) {
+            const { data, error } = await supabase
+                .from('tasks')
+                .insert({
+                    user_id: user.id,
+                    description: task.description,
+                    position: task.position
+                })
+                .select()
+                .single();
+            if (error) {
+                dirtyTasks.add(task);
+            } else if (data) {
+                task.id = data.id;
+            }
+        } else {
+            const { error } = await supabase
+                .from('tasks')
+                .update({ description: task.description, position: task.position })
+                .eq('id', task.id);
+            if (error) {
+                dirtyTasks.add(task);
             }
         }
-    }
-
-    for (const t of toUpdate) {
-        await supabase
-            .from('tasks')
-            .update({ description: t.description, position: t.position })
-            .eq('id', t.id);
     }
 }
 
