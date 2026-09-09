@@ -1622,3 +1622,474 @@ body.dark-mode .error-banner {
         text-align: center;
     }
 }
+
+/* =============================================
+   TERMO DE RECEBIMENTO DEFINITIVO
+   ============================================= */
+
+.trd-toolbar {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 22px;
+    flex-wrap: wrap;
+}
+
+.trd-toolbar button {
+    flex: 1;
+    min-width: 150px;
+    padding: 14px;
+}
+
+.trd-layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    align-items: start;
+}
+
+.trd-form {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+.trd-form-section {
+    background-color: var(--surface-2);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.trd-form-section h3 {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--primary-color);
+    margin-bottom: 2px;
+}
+
+.trd-section-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.trd-section-head h3 {
+    margin-bottom: 0;
+}
+
+.trd-field-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+}
+
+.trd-field {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.trd-field label {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--muted-text);
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+}
+
+.trd-field input,
+.trd-field textarea,
+.trd-field select {
+    width: 100%;
+}
+
+.trd-field textarea {
+    min-height: 46px;
+}
+
+.trd-hint {
+    text-transform: none;
+    letter-spacing: 0;
+    font-weight: 500;
+}
+
+.trd-edit-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12px;
+}
+
+.trd-edit-table th {
+    text-align: left;
+    font-size: 11px;
+    text-transform: uppercase;
+    color: var(--muted-text);
+    padding: 6px 4px;
+    border-bottom: 2px solid var(--border-color);
+    white-space: nowrap;
+}
+
+.trd-edit-table td {
+    padding: 3px 4px;
+    border-bottom: 1px solid var(--border-color);
+    vertical-align: top;
+}
+
+.trd-edit-table input {
+    width: 100%;
+    min-width: 0;
+    padding: 6px 8px;
+    font-size: 13px;
+    background-color: var(--input-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    color: var(--text-color);
+    outline: none;
+}
+
+.trd-edit-table input:focus {
+    border-color: var(--primary-color);
+}
+
+.trd-edit-table .btn-icon-only {
+    width: 34px;
+    height: 34px;
+}
+
+.trd-row-num {
+    text-align: center;
+    font-weight: 600;
+    color: var(--muted-text);
+    width: 32px;
+}
+
+.trd-total-label {
+    font-weight: 700;
+    text-align: right;
+    color: var(--text-color);
+    padding-top: 8px !important;
+}
+
+.trd-total-value {
+    font-weight: 700;
+    color: var(--primary-color);
+    padding-top: 8px !important;
+    white-space: nowrap;
+}
+
+.btn-add-field {
+    background-color: var(--success-color);
+    width: 100%;
+    padding: 10px;
+    margin-top: 8px;
+}
+
+.trd-preview {
+    position: sticky;
+    top: 14px;
+    min-width: 0;
+}
+
+.trd-preview-label {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--muted-text);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 8px;
+    text-align: center;
+}
+
+.trd-preview-sheet {
+    background-color: #ffffff;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    box-shadow: var(--shadow-md);
+    padding: 24px;
+    max-height: 80vh;
+    overflow-y: auto;
+}
+
+.trd-document {
+    color: #111111;
+    font-family: 'Times New Roman', Times, serif;
+    font-size: 13px;
+    line-height: 1.45;
+}
+
+.trd-sheet {
+    background: #fff;
+    padding: 8px 16px 24px;
+}
+
+.trd-header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    border-bottom: 2px solid #111;
+    padding-bottom: 8px;
+    margin-bottom: 10px;
+}
+
+.trd-logo {
+    height: 56px;
+    width: auto;
+    object-fit: contain;
+}
+
+.trd-header-titles {
+    text-align: center;
+    flex: 1;
+}
+
+.trd-header-estado {
+    font-size: 12px;
+    letter-spacing: 1px;
+}
+
+.trd-header-orgao {
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.trd-header-doc {
+    font-size: 15px;
+    font-weight: bold;
+    letter-spacing: 0.5px;
+}
+
+.trd-header-contrato {
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.trd-h1 {
+    text-align: center;
+    font-size: 16px;
+    font-weight: bold;
+    margin: 10px 0 14px;
+    color: #111;
+}
+
+.trd-h3 {
+    display: block;
+    font-size: 12px;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+    background: #eee;
+    border-bottom: 1px solid #111;
+    padding: 3px 6px;
+    margin: 14px 0 6px;
+    color: #111;
+    text-align: center;
+}
+
+.trd-p {
+    margin: 4px 0 8px;
+    text-align: justify;
+}
+
+.trd-table-min {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 4px 0 8px;
+}
+
+.trd-table-min td {
+    border: 1px solid #111;
+    padding: 4px 6px;
+    font-size: 12px;
+}
+
+.trd-table-min td.w {
+    width: 32%;
+    font-weight: bold;
+    text-align: center;
+}
+
+.trd-table-list {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 4px 0 8px;
+}
+
+.trd-table-list th,
+.trd-table-list td {
+    border: 1px solid #111;
+    padding: 4px 6px;
+    font-size: 11.5px;
+}
+
+.trd-table-list th {
+    background: #eee;
+    font-weight: bold;
+}
+
+.trd-table-list .c {
+    text-align: center;
+}
+
+.trd-table-list .l {
+    text-align: left;
+}
+
+.trd-table-list .r {
+    text-align: right;
+}
+
+.trd-table-list .w-sm {
+    width: 36px;
+}
+
+.trd-table-list tr.trd-total td {
+    border-top: 2px solid #111;
+    font-weight: bold;
+    background: #f7f7f7;
+}
+
+.trd-assinaturas {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+    margin-top: 40px;
+    text-align: center;
+}
+
+.trd-assinatura-linha {
+    border-bottom: 1px solid #111;
+    height: 56px;
+    margin-bottom: 6px;
+}
+
+.trd-assinatura-cargo {
+    font-size: 11px;
+    line-height: 1.3;
+}
+
+@media (max-width: 980px) {
+    .trd-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .trd-preview {
+        position: static;
+    }
+}
+
+/* =============================================
+   IMPRESSAO - TERMO DE RECEBIMENTO (A4)
+   ============================================= */
+
+@media print {
+    @page {
+        size: A4 portrait;
+        margin: 15mm 18mm 18mm 18mm;
+    }
+
+    body {
+        background: #ffffff;
+    }
+
+    .screen {
+        display: none !important;
+    }
+
+    #app-screen {
+        display: block !important;
+        background: #ffffff;
+    }
+
+    .app-header,
+    .main-nav,
+    .app-footer,
+    .trd-toolbar,
+    .trd-form {
+        display: none !important;
+    }
+
+    .main-content {
+        max-width: none;
+        margin: 0;
+        padding: 0;
+    }
+
+    .content-card {
+        box-shadow: none;
+        border: none;
+        padding: 0;
+    }
+
+    .tab-content {
+        display: none !important;
+    }
+
+    #tab-termo {
+        display: block !important;
+    }
+
+    .trd-layout {
+        display: block;
+    }
+
+    .trd-preview {
+        position: static;
+    }
+
+    .trd-preview-label {
+        display: none;
+    }
+
+    .trd-preview-sheet {
+        border: none;
+        box-shadow: none;
+        padding: 0;
+        max-height: none;
+        overflow: visible;
+    }
+
+    .trd-document {
+        font-size: 12pt;
+    }
+
+    .trd-sheet {
+        padding: 0;
+    }
+
+    .trd-header {
+        border-bottom: 2px solid #000;
+    }
+
+    .trd-table-list th,
+    .trd-table-list td,
+    .trd-table-min td {
+        border-color: #000;
+    }
+
+    .trd-table-list thead {
+        display: table-header-group;
+    }
+
+    .trd-sheet,
+    .trd-document {
+        page-break-inside: auto;
+    }
+
+    .trd-h3 {
+        page-break-after: avoid;
+    }
+
+    .trd-table-list tr,
+    .trd-table-min tr {
+        page-break-inside: avoid;
+    }
+
+    .trd-assinaturas {
+        margin-top: 60px;
+    }
+}

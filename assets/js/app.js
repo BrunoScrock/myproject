@@ -6,6 +6,7 @@ import { mudarCategoriaEprotocolo, formatarNome, gerarEprotocolo, limparEprotoco
 import { normalParaDecimal, decimalParaNormal } from './hours.js';
 import { loadAuditLog, renderAuditEntries, resetAuditFilters } from './audit.js';
 import { checkMigrationNeeded, showMigrationModal } from './migration.js';
+import { initTermoRecebimento, updatePreview } from './termo-recebimento.js';
 
 function showScreen(screenId) {
     ['login-screen', 'loading-screen', 'app-screen'].forEach(id => {
@@ -71,7 +72,7 @@ function setupEventListeners() {
     document.getElementById('theme-toggle')?.addEventListener('click', toggleTheme);
 
     document.getElementById('btn-open-auditoria')?.addEventListener('click', () => {
-        openTab('tab-auditoria', document.querySelector('.tab-btn[data-tab="tab-auditoria"]'));
+        openTab('tab-auditoria', null);
     });
 
     document.getElementById('audit-filter-table')?.addEventListener('change', renderAuditEntries);
@@ -122,6 +123,8 @@ function openTab(tabId, btnElement) {
 
     if (tabId === 'tab-auditoria') {
         loadAuditLog();
+    } else if (tabId === 'tab-termo') {
+        updatePreview();
     }
 }
 
@@ -269,6 +272,7 @@ window.addEventListener('DOMContentLoaded', () => {
     }
 
     setupEventListeners();
+    initTermoRecebimento();
 
     setTimeout(() => {
         if (document.getElementById('app-screen').style.display !== 'flex') {
