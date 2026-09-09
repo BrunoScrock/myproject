@@ -31,6 +31,7 @@ CREATE TABLE IF NOT EXISTS scheduled_tasks (
     description TEXT DEFAULT '',
     due_date DATE,
     notification_dismissed BOOLEAN DEFAULT FALSE,
+    email_sent BOOLEAN DEFAULT FALSE,
     created_at TIMESTAMPTZ DEFAULT now(),
     updated_at TIMESTAMPTZ DEFAULT now()
 );

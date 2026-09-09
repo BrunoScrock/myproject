@@ -246,6 +246,7 @@ body.dark-mode .btn-google-login:hover {
     justify-content: center;
     flex-shrink: 0;
     box-shadow: var(--shadow-md);
+    object-fit: cover;
 }
 
 .brand-icon .material-symbols-rounded {

@@ -6,6 +6,7 @@ Sistema pessoal web para organização de tarefas, anotações e geração de de
 
 - **Tarefas do Dia** - Crie, edite, copie e exclua tarefas diárias
 - **Tarefas Agendadas** - Programe tarefas com data final e receba notificações
+- **Lembrete por E-mail** - Receba um e-mail de aviso quando a tarefa agendada chega na data (veja [docs/email-reminders.md](docs/email-reminders.md))
 - **Anotações Fixas** - Mantenha anotações importantes organizadas com cores
 - **Gerador de Despachos** - Gere despachos para Liberação de Sistema e Ausência de Perfil
 - **Conversor de Horas** - Converta entre horário normal (H:MM) e horas decimais, e vice-versa
