@@ -36,6 +36,10 @@ function getTodayDateString() {
     return today.toISOString().split('T')[0];
 }
 
+function escAttr(value) {
+    return String(value ?? '').replace(/&/g, '&amp;').replace(/"/g, '&quot;');
+}
+
 export function renderScheduledTasks() {
     const listContainer = document.getElementById('scheduled-list');
     if (!listContainer) return;
@@ -67,24 +71,30 @@ export function renderScheduledTasks() {
             }
         }
 
+        const taskKey = task.id || task._draftId || '';
         if (task.isEditing) {
             cardDiv.innerHTML = `
                 <div class="scheduled-header">
-                    <input type="text" placeholder="Título da Tarefa Agendada" value="${task.title || ''}" 
-                           data-field="title" data-id="${task.id}">
+                    <input type="text" placeholder="Título da Tarefa Agendada" value="${escAttr(task.title || '')}" 
+                           data-field="title" data-id="${taskKey}">
                 </div>
                 <textarea placeholder="Detalhes da tarefa..." 
-                          data-field="description" data-id="${task.id}">${task.description || ''}</textarea>
+                          data-field="description" data-id="${taskKey}">${task.description || ''}</textarea>
                 <div class="scheduled-footer">
                     <div class="scheduled-date-group">
                         <span class="material-symbols-rounded">event</span> Data Final:
                         <input type="date" value="${task.due_date || ''}" 
-                               data-field="due_date" data-id="${task.id}">
+                               data-field="due_date" data-id="${taskKey}">
                     </div>
                 </div>
-                <button class="btn-save" onclick="window.ScheduledTasksModule.toggleEditMode('${task.id}', false)">
-                    <span class="material-symbols-rounded">save</span> Salvar Tarefa
-                </button>
+                <div class="scheduled-edit-actions">
+                    <button class="btn-save" onclick="window.ScheduledTasksModule.saveScheduledTask('${taskKey}')">
+                        <span class="material-symbols-rounded">save</span> Salvar Tarefa
+                    </button>
+                    <button class="btn-delete" onclick="window.ScheduledTasksModule.cancelScheduledTask('${taskKey}')">
+                        <span class="material-symbols-rounded">close</span> Cancelar
+                    </button>
+                </div>
             `;
         } else {
             const displayDate = task.due_date
@@ -143,30 +153,27 @@ export async function addScheduledTask() {
     const user = getCurrentUser();
     if (!user) return;
 
-    const supabase = getSupabase();
-    const { data, error } = await supabase
-        .from('scheduled_tasks')
-        .insert({
-            user_id: user.id,
-            title: '',
-            description: '',
-            due_date: null,
-            notification_dismissed: false
-        })
-        .select()
-        .single();
+    const draft = {
+        id: null,
+        _draftId: 'draft-' + Date.now(),
+        user_id: user.id,
+        title: '',
+        description: '',
+        due_date: null,
+        notification_dismissed: false,
+        isEditing: true
+    };
 
-    if (error) {
-        console.error('Erro ao criar tarefa agendada:', error.message);
-        return;
-    }
-
-    scheduledTasks.unshift({ ...data, isEditing: true });
+    scheduledTasks.unshift(draft);
     renderScheduledTasks();
 }
 
-async function updateScheduledTask(id, field, value) {
-    const task = scheduledTasks.find(t => t.id === id);
+function findTask(key) {
+    return scheduledTasks.find(t => (t.id || t._draftId) === key);
+}
+
+function updateScheduledTask(key, field, value) {
+    const task = findTask(key);
     if (!task) return;
 
     task[field] = value;
@@ -174,30 +181,101 @@ async function updateScheduledTask(id, field, value) {
         task.notification_dismissed = false;
         renderScheduledTasks();
     }
-
-    const supabase = getSupabase();
-    const dbField = field === 'text' ? 'description' : field;
-    await supabase
-        .from('scheduled_tasks')
-        .update({ [dbField]: value, notification_dismissed: task.notification_dismissed })
-        .eq('id', id);
 }
 
-export function toggleEditMode(id, isEditing) {
-    const task = scheduledTasks.find(t => t.id === id);
+export async function saveScheduledTask(key) {
+    const task = findTask(key);
     if (!task) return;
+
+    const user = getCurrentUser();
+    if (!user) return;
+
+    const payload = {
+        title: task.title,
+        description: task.description,
+        due_date: task.due_date || null,
+        notification_dismissed: !!task.notification_dismissed
+    };
+
+    const supabase = getSupabase();
+
+    if (task.id) {
+        const { error } = await supabase
+            .from('scheduled_tasks')
+            .update(payload)
+            .eq('id', task.id);
+        if (error) {
+            console.error('Erro ao salvar tarefa agendada:', error.message);
+            alert('Erro ao salvar. Tente novamente.');
+            return;
+        }
+    } else {
+        const { data, error } = await supabase
+            .from('scheduled_tasks')
+            .insert({ ...payload, user_id: user.id })
+            .select()
+            .single();
+        if (error) {
+            console.error('Erro ao criar tarefa agendada:', error.message);
+            alert('Erro ao salvar. Tente novamente.');
+            return;
+        }
+        task.id = data.id;
+        delete task._draftId;
+    }
+
+    task.isEditing = false;
+    delete task._savedValues;
+    renderScheduledTasks();
+}
+
+export function cancelScheduledTask(key) {
+    const task = findTask(key);
+    if (!task) return;
+
+    if (!task.id) {
+        scheduledTasks = scheduledTasks.filter(t => (t.id || t._draftId) !== key);
+    } else {
+        if (task._savedValues) {
+            Object.assign(task, task._savedValues);
+        }
+        task.isEditing = false;
+    }
+    delete task._savedValues;
+    renderScheduledTasks();
+}
+
+export function toggleEditMode(key, isEditing) {
+    const task = findTask(key);
+    if (!task) return;
+    if (isEditing && task.id) {
+        task._savedValues = {
+            title: task.title,
+            description: task.description,
+            due_date: task.due_date
+        };
+    }
     task.isEditing = isEditing;
     renderScheduledTasks();
 }
 
-export async function deleteScheduledTask(id) {
+export async function deleteScheduledTask(key) {
+    const task = findTask(key);
+    if (!task) return;
+
+    if (!task.id) {
+        scheduledTasks = scheduledTasks.filter(t => (t.id || t._draftId) !== key);
+        renderScheduledTasks();
+        return;
+    }
+
     if (!confirm('Tem certeza que deseja excluir esta tarefa agendada?')) return;
 
-    scheduledTasks = scheduledTasks.filter(t => t.id !== id);
+    scheduledTasks = scheduledTasks.filter(t => t.id !== task.id);
     renderScheduledTasks();
 
     const supabase = getSupabase();
-    await supabase.from('scheduled_tasks').delete().eq('id', id);
+    await supabase.from('scheduled_tasks').delete().eq('id', task.id);
 }
 
 export async function dismissNotification(id) {
@@ -227,4 +305,4 @@ export function copyScheduledTask(id) {
     });
 }
 
-window.ScheduledTasksModule = { dismissNotification, toggleEditMode, deleteScheduledTask, copyScheduledTask };
+window.ScheduledTasksModule = { dismissNotification, toggleEditMode, saveScheduledTask, cancelScheduledTask, deleteScheduledTask, copyScheduledTask };

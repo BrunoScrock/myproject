@@ -64,7 +64,10 @@ export function renderFixedNotes() {
             const titleHTML = note.title ? `<div class="fixed-note-title-display">${note.title}</div>` : '';
 
             noteDiv.innerHTML = `
-                <div class="fixed-note-content-area">
+                <div class="fixed-note-content-area" role="button" tabindex="0"
+                     onclick="window.FixedNotesModule.openFixedNoteModal('${note.id}')"
+                     onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();window.FixedNotesModule.openFixedNoteModal('${note.id}');}"
+                     title="Clique para expandir">
                     ${titleHTML}
                     <span class="fixed-note-text">${note.content || ''}</span>
                 </div>
@@ -246,11 +249,46 @@ export async function removeFixedNote(id) {
     await supabase.from('fixed_notes').delete().eq('id', id);
 }
 
+export function openFixedNoteModal(id) {
+    const note = fixedNotes.find(n => n.id === id);
+    if (!note) return;
+
+    const modal = document.getElementById('fixed-note-modal');
+    if (!modal) return;
+
+    const card = modal.querySelector('.fixed-note-modal-card');
+    const titleEl = document.getElementById('fixed-note-modal-title');
+    const textEl = document.getElementById('fixed-note-modal-text');
+
+    const colorClass = note.color ? `note-color-${note.color}` : 'note-color-default';
+    card.className = `fixed-note-modal-card ${colorClass}`;
+    titleEl.textContent = note.title || '';
+    titleEl.style.display = note.title ? 'block' : 'none';
+    textEl.textContent = note.content || '';
+
+    modal.classList.add('visible');
+    modal.setAttribute('aria-hidden', 'false');
+    modal.querySelector('.fixed-note-modal-close')?.focus();
+}
+
+export function closeFixedNoteModal() {
+    const modal = document.getElementById('fixed-note-modal');
+    if (!modal) return;
+    modal.classList.remove('visible');
+    modal.setAttribute('aria-hidden', 'true');
+}
+
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') closeFixedNoteModal();
+});
+
 window.FixedNotesModule = {
     saveFixedNoteEdit,
     toggleFixedNoteEdit,
     changeFixedNoteColor,
     moveFixedNote,
     copyFixedNote,
-    removeFixedNote
+    removeFixedNote,
+    openFixedNoteModal,
+    closeFixedNoteModal
 };

@@ -352,6 +352,7 @@
                     <div id="audit-count" class="audit-count"></div>
                     <div id="audit-list" class="audit-list"></div>
                     <div id="audit-empty" class="audit-empty" style="display: none;">Carregando auditoria...</div>
+                    <div id="audit-pagination" class="audit-pagination"></div>
                 </div>
             </div>
 
@@ -556,6 +557,18 @@
                 <button class="btn-modal-primary" onclick="window.MigrationModule.migrateLocalData()">Importar</button>
                 <button class="btn-modal-secondary" onclick="window.MigrationModule.skipMigration()">Agora não</button>
             </div>
+        </div>
+    </div>
+
+    <!-- MODAL ANOTACAO FIXA (ZOOM + BLUR) -->
+    <div id="fixed-note-modal" class="fixed-note-modal" aria-hidden="true">
+        <div class="fixed-note-modal-backdrop" onclick="window.FixedNotesModule.closeFixedNoteModal()"></div>
+        <div class="fixed-note-modal-card" role="dialog" aria-modal="true" aria-label="Anotação">
+            <button class="fixed-note-modal-close" onclick="window.FixedNotesModule.closeFixedNoteModal()" title="Fechar">
+                <span class="material-symbols-rounded">close</span>
+            </button>
+            <div class="fixed-note-modal-title" id="fixed-note-modal-title"></div>
+            <div class="fixed-note-modal-text" id="fixed-note-modal-text"></div>
         </div>
     </div>
 

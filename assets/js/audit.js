@@ -10,7 +10,11 @@ const TABLE_LABELS = {
 
 const HIDDEN_FIELDS = ['id', 'user_id', 'created_at', 'updated_at', 'is_editing'];
 
+const PAGE_SIZE = 20;
+
 let allEntries = [];
+let currentPage = 1;
+let lastFilterKey = '';
 
 export async function loadAuditLog() {
     const { data, error } = await getSupabase()
@@ -27,10 +31,13 @@ export async function loadAuditLog() {
             showAuditMessage('Erro ao carregar auditoria: ' + error.message);
         }
         allEntries = [];
+        currentPage = 1;
+        renderAuditPagination(0);
         return;
     }
 
     allEntries = data || [];
+    currentPage = 1;
     renderAuditEntries();
 }
 
@@ -56,6 +63,13 @@ function getFilters() {
 
 export function renderAuditEntries() {
     const filters = getFilters();
+
+    const filterKey = [filters.table, filters.operation, filters.search].join('|');
+    if (filterKey !== lastFilterKey) {
+        currentPage = 1;
+        lastFilterKey = filterKey;
+    }
+
     const entries = allEntries.filter(e => {
         if (filters.table && e.table_name !== filters.table) return false;
         if (filters.operation && e.operation !== filters.operation) return false;
@@ -79,11 +93,61 @@ export function renderAuditEntries() {
             empty.style.display = 'block';
             empty.textContent = 'Nenhum registro encontrado para os filtros escolhidos.';
         }
+        renderAuditPagination(0);
         return;
     }
 
     if (empty) empty.style.display = 'none';
-    entries.forEach(e => list.appendChild(buildAuditItem(e)));
+
+    const totalPages = Math.ceil(entries.length / PAGE_SIZE);
+    if (currentPage > totalPages) currentPage = totalPages;
+    const start = (currentPage - 1) * PAGE_SIZE;
+    const pageEntries = entries.slice(start, start + PAGE_SIZE);
+
+    pageEntries.forEach(e => list.appendChild(buildAuditItem(e)));
+    renderAuditPagination(totalPages);
+}
+
+export function goToAuditPage(page) {
+    const filters = getFilters();
+    const entries = allEntries.filter(e => {
+        if (filters.table && e.table_name !== filters.table) return false;
+        if (filters.operation && e.operation !== filters.operation) return false;
+        if (filters.search) {
+            const haystack = JSON.stringify(e) || '';
+            if (!haystack.toLowerCase().includes(filters.search)) return false;
+        }
+        return true;
+    });
+    const totalPages = Math.max(1, Math.ceil(entries.length / PAGE_SIZE));
+    currentPage = Math.min(Math.max(1, page), totalPages);
+    renderAuditEntries();
+}
+
+function renderAuditPagination(totalPages) {
+    const container = document.getElementById('audit-pagination');
+    if (!container) return;
+    container.innerHTML = '';
+
+    if (totalPages <= 1) return;
+
+    const prev = document.createElement('button');
+    prev.className = 'btn-audit-page';
+    prev.innerHTML = '<span class="material-symbols-rounded">chevron_left</span>';
+    prev.disabled = currentPage <= 1;
+    prev.onclick = () => goToAuditPage(currentPage - 1);
+
+    const next = document.createElement('button');
+    next.className = 'btn-audit-page';
+    next.innerHTML = '<span class="material-symbols-rounded">chevron_right</span>';
+    next.disabled = currentPage >= totalPages;
+    next.onclick = () => goToAuditPage(currentPage + 1);
+
+    const info = document.createElement('span');
+    info.className = 'audit-page-info';
+    info.textContent = `Página ${currentPage} de ${totalPages}`;
+
+    container.append(prev, info, next);
 }
 
 function buildAuditItem(entry) {

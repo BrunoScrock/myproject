@@ -875,6 +875,44 @@ hr {
     padding: 30px 0;
 }
 
+.audit-pagination {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    margin-top: 18px;
+}
+
+.btn-audit-page {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 42px;
+    height: 42px;
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+    background-color: var(--input-bg);
+    color: var(--text-color);
+    cursor: pointer;
+    transition: background-color 0.2s, border-color 0.2s;
+}
+
+.btn-audit-page:hover:not(:disabled) {
+    background-color: var(--surface-2);
+    border-color: var(--edit-color);
+}
+
+.btn-audit-page:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+.audit-page-info {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--muted-text);
+}
+
 /* =============================================
    RODAPE
    ============================================= */
@@ -1205,6 +1243,18 @@ button:active:not(:disabled) {
     color: var(--primary-color);
 }
 
+.scheduled-edit-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 2px;
+}
+
+.scheduled-edit-actions .btn-save,
+.scheduled-edit-actions .btn-delete {
+    flex: 1;
+    justify-content: center;
+}
+
 .view-actions {
     position: absolute;
     top: 15px;
@@ -1296,6 +1346,13 @@ body.dark-mode .note-color-pink { background-color: #3A1E2E !important; border-c
     flex-direction: column;
     flex: 1;
     margin-right: 15px;
+    cursor: pointer;
+}
+
+.fixed-note-content-area:focus-visible {
+    outline: 2px solid var(--edit-color);
+    outline-offset: 2px;
+    border-radius: 6px;
 }
 
 .fixed-note-title-display {
@@ -1335,6 +1392,108 @@ body.dark-mode .note-color-pink { background-color: #3A1E2E !important; border-c
     gap: 8px;
     flex: 1;
     margin-right: 0;
+}
+
+/* =============================================
+   MODAL ANOTACAO FIXA (ZOOM + BLUR)
+   ============================================= */
+
+.fixed-note-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 1100;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.25s ease, visibility 0.25s ease;
+}
+
+.fixed-note-modal.visible {
+    opacity: 1;
+    visibility: visible;
+}
+
+.fixed-note-modal-backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.45);
+    -webkit-backdrop-filter: blur(6px);
+    backdrop-filter: blur(6px);
+}
+
+.fixed-note-modal-card {
+    position: relative;
+    width: 100%;
+    max-width: 680px;
+    max-height: 80vh;
+    overflow-y: auto;
+    background-color: var(--input-bg);
+    border: 2px solid var(--border-color);
+    border-radius: 16px;
+    box-shadow: 0 24px 48px rgba(0, 0, 0, 0.35);
+    padding: 28px;
+    transform: scale(0.6);
+    opacity: 0;
+    transition: transform 0.28s cubic-bezier(0.2, 0.9, 0.3, 1.2), opacity 0.25s ease;
+}
+
+.fixed-note-modal.visible .fixed-note-modal-card {
+    transform: scale(1);
+    opacity: 1;
+}
+
+.fixed-note-modal-close {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 1px solid var(--border-color);
+    background-color: var(--surface-2);
+    color: var(--text-color);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: border-color 0.2s, color 0.2s, background-color 0.2s;
+}
+
+.fixed-note-modal-close:hover {
+    border-color: var(--danger-color);
+    color: var(--danger-color);
+    background-color: var(--input-bg);
+}
+
+.fixed-note-modal-title {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--muted-text);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 12px;
+    padding-right: 44px;
+}
+
+.fixed-note-modal-text {
+    font-size: 17px;
+    line-height: 1.6;
+    color: var(--text-color);
+    white-space: pre-wrap;
+    word-break: break-word;
+}
+
+@media (max-width: 600px) {
+    .fixed-note-modal {
+        padding: 12px;
+    }
+
+    .fixed-note-modal-card {
+        padding: 20px;
+    }
 }
 
 /* =============================================
