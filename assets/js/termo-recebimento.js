@@ -1,19 +1,35 @@
-const MESES = ['JANEIRO', 'FEVEREIRO', 'MARÇO', 'ABRIL', 'MAIO', 'JUNHO', 'JULHO', 'AGOSTO', 'SETEMBRO', 'OUTUBRO', 'NOVEMBRO', 'DEZEMBRO'];
+const MESES = ['janeiro', 'fevereiro', 'março', 'abril', 'maio', 'junho', 'julho', 'agosto', 'setembro', 'outubro', 'novembro', 'dezembro'];
 
 const ITENS_PADRAO = [
     { numero: '01', descricao: 'PABX Virtual com Central de Atendimento', unidade: 'Licença de Uso', quantidade: '1', valorUnitario: '3002,88' },
-    { numero: '02', descricao: 'Licença Disponível para Usuário de PABX Virtual', unidade: 'Usuário', quantidade: '465', valorUnitario: '12,09' },
-    { numero: '03', descricao: 'Posição de Atendimento', unidade: 'Posição', quantidade: '11', valorUnitario: '77,18' },
-    { numero: '04', descricao: 'URA Tipo 2', unidade: 'URA', quantidade: '1', valorUnitario: '290,17' }
+    { numero: '02', descricao: 'Licença para Usuário de PABX Virtual', unidade: 'Usuário', quantidade: '465', valorUnitario: '12,09' },
+    { numero: '03', descricao: 'Licença para Posição de Central de Atendimento', unidade: 'Posição de Atendimento', quantidade: '11', valorUnitario: '77,18' },
+    { numero: '04', descricao: 'Licença para URA Tipo 2', unidade: 'URA', quantidade: '1', valorUnitario: '290,17' }
 ];
 
 const INDICADORES_PADRAO = [
-    { indicador: 'Disponibilidade do Serviço', resultado: '99,50%', meta: '99,50%' },
-    { indicador: 'Incidentes Críticos', resultado: '0', meta: '0' },
-    { indicador: 'Incidentes de Alta Severidade', resultado: '0', meta: '0' },
-    { indicador: 'Chamados Atendidos no Prazo', resultado: '100%', meta: '100%' },
-    { indicador: 'Tempo Médio de Atendimento', resultado: '100%', meta: '100%' }
+    { indicador: 'Disponibilidade do serviço', resultado: '100%', meta: '>=99%' },
+    { indicador: 'Resolução de Incidentes de Alta Severidade', resultado: 'não foram registrados incidentes no período', meta: 'Resolução de todos os incidentes de alta severidade no tempo de solução acordado' },
+    { indicador: 'Resolução de Incidentes de Média Severidade', resultado: 'não foram registrados incidentes no período', meta: 'Resolução de todos os incidentes de média severidade no tempo de solução acordado' },
+    { indicador: 'Resolução de Incidentes de Baixa Severidade', resultado: 'não foram registrados incidentes no período', meta: 'Resolução de todos os incidentes de baixa severidade no tempo de solução acordado' },
+    { indicador: 'Resolução de Requisições', resultado: 'não foram registrados incidentes no período', meta: 'Resolução de todos os incidentes de baixa severidade no tempo de solução acordado' }
 ];
+
+const CONFERENCIA_PADRAO = 'Declaramos que foram conferidas a disponibilidade do serviço, os incidentes, as requisições e os valores do período de apuração, e que a(s) entrega(s) atende(m) às exigências contratuais.';
+
+const ASSINATURA_1 = {
+    nome: 'Bruno Batista Scrock',
+    cargo: 'Assessor',
+    comissao: 'Comissão de Recebimento',
+    portaria: 'Portaria nº 081/2025-PGE'
+};
+
+const ASSINATURA_2 = {
+    nome: 'Alan Ferreira de Oliveira',
+    cargo: 'Profissional de Tecnologia da Informação',
+    comissao: 'Comissão de Recebimento',
+    portaria: 'Portaria nº 081/2025-PGE'
+};
 
 const ORIGINAL_TITLE = document.title;
 
@@ -37,32 +53,27 @@ function formatDate(iso) {
     return y && m && d ? `${d}/${m}/${y}` : iso;
 }
 
-function mesLetra(iso) {
+function mesNome(iso) {
     if (!iso) return '';
-    const [y, m] = iso.split('-');
-    const idx = parseInt(m, 10) - 1;
+    const idx = parseInt(iso.split('-')[1], 10) - 1;
     return MESES[idx] || '';
 }
 
 function capitalize(str) {
-    return str.charAt(0) + str.slice(1).toLowerCase();
+    return str.charAt(0).toUpperCase() + str.slice(1);
 }
 
 function autoPeriodo(inicio, fim) {
-    const mi = mesLetra(inicio);
-    const mf = mesLetra(fim);
+    const mi = mesNome(inicio);
+    const mf = mesNome(fim);
     if (!mi || !mf) return '';
-    let periodo;
-    if (mi === mf) {
-        periodo = capitalize(mi) + (inicio ? '/' + inicio.split('-')[0] : '');
-    } else {
-        periodo = `${capitalize(mi)}/${capitalize(mf)}`;
-    }
-    return periodo;
+    const a = capitalize(mi);
+    const b = capitalize(mf);
+    return a === b ? a : `${a}/${b}`;
 }
 
 function autoDescricao(periodo, inicio, fim) {
-    return `Serviço de Telefonia Digital no mês de ${capitalize(periodo.split('/')[0])}${periodo.includes('/') ? '/' + periodo.split('/').pop() : ''} entre as datas de ${formatDate(inicio)} a ${formatDate(fim)}.`;
+    return `Serviço de Telefonia Digital no mês de ${periodo} entre as datas de ${formatDate(inicio)} a ${formatDate(fim)}.`;
 }
 
 function autoPeriodoLine(periodo, inicio, fim) {
@@ -90,18 +101,6 @@ function escapeHtml(s) {
         .replace(/</g, '&lt;')
         .replace(/>/g, '&gt;')
         .replace(/"/g, '&quot;');
-}
-
-function getRowData(row) {
-    const q = row.querySelector('.trd-row-qtd');
-    const u = row.querySelector('.trd-row-unit');
-    const t = row.querySelector('.trd-row-total');
-    const num = parseNum(q?.value ?? '0');
-    const unit = parseNum(u?.value ?? '0');
-    let total = parseNum(t?.value ?? '0');
-    const auto = document.getElementById('trd-autocalc')?.checked ?? true;
-    if (auto) total = num * unit;
-    return { qtd: num, unit, total };
 }
 
 export function initTermoRecebimento() {
@@ -230,6 +229,8 @@ function bindEvents() {
 
     document.getElementById('trd-periodo')?.addEventListener('input', updatePreview);
     document.getElementById('trd-descricao')?.addEventListener('input', updatePreview);
+    document.getElementById('trd-conferencia')?.addEventListener('input', updatePreview);
+    document.getElementById('trd-ressalvas')?.addEventListener('input', updatePreview);
 
     document.getElementById('trd-itens-tbody')?.addEventListener('input', (e) => {
         if (e.target.classList.contains('trd-row-qtd') || e.target.classList.contains('trd-row-unit')) {
@@ -345,16 +346,13 @@ export function updatePreview() {
     const doc = document.getElementById('trd-document');
     if (!doc) return;
 
-    const contratante = escapeHtml(document.getElementById('trd-contratante')?.value || '');
-    const contratado = escapeHtml(document.getElementById('trd-contratado')?.value || '');
     const objeto = escapeHtml(document.getElementById('trd-objeto')?.value || '');
-    const comissao = (document.getElementById('trd-comissao')?.value || '').split('\n').map(s => escapeHtml(s));
     const dataRecebimento = formatDate(document.getElementById('trd-data-recebimento')?.value);
     const inicio = document.getElementById('trd-data-inicio')?.value || '';
     const fim = document.getElementById('trd-data-fim')?.value || '';
     const periodo = escapeHtml(document.getElementById('trd-periodo')?.value || '');
     const descricao = escapeHtml(document.getElementById('trd-descricao')?.value || '');
-    const conferenciaStatus = escapeHtml(document.getElementById('trd-conferencia-status')?.value || '');
+    const conferencia = escapeHtml(document.getElementById('trd-conferencia')?.value || '');
     const ressalvas = escapeHtml(document.getElementById('trd-ressalvas')?.value || '');
 
     const rows = getRows();
@@ -363,104 +361,133 @@ export function updatePreview() {
 
     const itemsRows = rows.map(r => `
         <tr>
-            <td class="c">${escapeHtml(r.numero)}</td>
-            <td class="l">${escapeHtml(r.descricao)}</td>
-            <td class="c">${escapeHtml(r.unidade)}</td>
-            <td class="c">${String(r.qtd).replace('.', ',')}</td>
-            <td class="r">${formatMoney(r.unit)}</td>
-            <td class="r">${formatMoney(r.total)}</td>
+            <td class="num">${escapeHtml(r.numero)}</td>
+            <td class="desc">${escapeHtml(r.descricao)}</td>
+            <td class="num">${escapeHtml(r.unidade)}</td>
+            <td class="num">${String(r.qtd).replace('.', ',')}</td>
+            <td class="money">${formatMoney(r.unit)}</td>
+            <td class="money">${formatMoney(r.total)}</td>
         </tr>`).join('');
+
+    const totalRow = rows.length
+        ? `<tr class="total">
+            <td colspan="5">TOTAL</td>
+            <td class="money">${formatMoney(total)}</td>
+        </tr>`
+        : '';
 
     const indRows = indicadores.map(i => `
         <tr>
-            <td class="l">${escapeHtml(i.indicador)}</td>
-            <td class="c">${escapeHtml(i.resultado)}</td>
-            <td class="c">${escapeHtml(i.meta)}</td>
+            <td class="ind">${escapeHtml(i.indicador)}</td>
+            <td class="ind">${escapeHtml(i.resultado)}</td>
+            <td class="ind">${escapeHtml(i.meta)}</td>
         </tr>`).join('');
+
+    const periodoLine = autoPeriodoLine(periodo, inicio, fim);
 
     doc.innerHTML = `
         <div class="trd-sheet">
-            <div class="trd-header">
+            <div class="trd-logo-wrap">
                 <img class="trd-logo" src="assets/img/pge-logo.png" alt="" onerror="this.style.display='none'">
-                <div class="trd-header-titles">
-                    <div class="trd-header-estado">PARANÁ - GOVERNO DO ESTADO</div>
-                    <div class="trd-header-orgao">PROCURADORIA-GERAL DO ESTADO</div>
-                    <div class="trd-header-doc">TERMO DE RECEBIMENTO DEFINITIVO</div>
-                    <div class="trd-header-contrato">CONTRATO Nº 6852/2025</div>
-                </div>
             </div>
 
-            <h2 class="trd-h1">TERMO DE RECEBIMENTO DEFINITIVO</h2>
-
-            <h3 class="trd-h3">IDENTIFICAÇÃO DAS PARTES</h3>
-            <table class="trd-table-min">
-                <tr><td class="w">CONTRATANTE</td><td>${contratante}</td></tr>
-                <tr><td class="w">CONTRATADO</td><td>${contratado}</td></tr>
+            <table class="trd-main">
+                <tr>
+                    <td colspan="2" class="trd-titlebar">TERMO DE RECEBIMENTO DEFINITIVO</td>
+                </tr>
+                <tr>
+                    <td class="trd-lbl">CONTRATO Nº</td>
+                    <td class="trd-val"><span class="trd-strong">6852/2025</span></td>
+                </tr>
+                <tr class="trd-spacer"><td></td><td></td></tr>
+                <tr>
+                    <td class="trd-lbl">IDENTIFICAÇÃO DAS PARTES</td>
+                    <td class="trd-val">
+                        <span class="trd-strong">CONTRATANTE: PROCURADORIA-GERAL DO ESTADO</span>
+                        <br><span class="trd-strong">CONTRATADO: &nbsp; CELEPAR</span>
+                    </td>
+                </tr>
+                <tr class="trd-spacer"><td></td><td></td></tr>
+                <tr>
+                    <td class="trd-lbl">OBJETO DO CONTRATO</td>
+                    <td class="trd-val"><span class="trd-strong">${objeto}</span></td>
+                </tr>
+                <tr class="trd-spacer"><td></td><td></td></tr>
+                <tr>
+                    <td class="trd-lbl">DATA DO RECEBIMENTO</td>
+                    <td class="trd-val"><span class="trd-strong">${dataRecebimento || '____/____/____'}</span></td>
+                </tr>
+                <tr class="trd-spacer"><td></td><td></td></tr>
+                <tr>
+                    <td class="trd-lbl">PERÍODO DE APURAÇÃO</td>
+                    <td class="trd-val">
+                        <span class="trd-strong">${periodo || '____________________'}</span>
+                        ${inicio && fim ? `<span> (${formatDate(inicio)} a ${formatDate(fim)})</span>` : ''}
+                    </td>
+                </tr>
+                <tr class="trd-spacer"><td></td><td></td></tr>
+                <tr>
+                    <td class="trd-lbl">DESCRIÇÃO DA ENTREGA</td>
+                    <td class="trd-val"><span class="trd-strong">${descricao || '____'}</span></td>
+                </tr>
+                <tr class="trd-spacer"><td></td><td></td></tr>
+                <tr>
+                    <td class="trd-lbl">VOLUMES E VALORES ENTREGUES</td>
+                    <td class="trd-val">
+                        <p class="trd-period-line">Período: ${periodoLine}</p>
+                        <table class="trd-sub-table">
+                            <tr>
+                                <th class="num">Item</th>
+                                <th class="desc">Descrição</th>
+                                <th class="num">Unidade Medida</th>
+                                <th class="num">Quantidade</th>
+                                <th class="money">Valor Unitário</th>
+                                <th class="money">Valor Total</th>
+                            </tr>
+                            ${itemsRows}
+                            ${totalRow}
+                        </table>
+                    </td>
+                </tr>
+                <tr class="trd-spacer"><td></td><td></td></tr>
+                <tr>
+                    <td class="trd-lbl">MEDIÇÃO DE RESULTADOS</td>
+                    <td class="trd-val">
+                        <table class="trd-sub-table ind">
+                            <tr>
+                                <th class="ind">Indicador</th>
+                                <th class="ind">Resultado</th>
+                                <th class="ind">Meta</th>
+                            </tr>
+                            ${indRows}
+                        </table>
+                    </td>
+                </tr>
+                <tr class="trd-spacer"><td></td><td></td></tr>
+                <tr>
+                    <td class="trd-lbl">CONFERÊNCIA E AVALIAÇÃO</td>
+                    <td class="trd-val">${conferencia || '____'}</td>
+                </tr>
+                <tr class="trd-spacer"><td></td><td></td></tr>
+                <tr>
+                    <td class="trd-lbl">RESSALVAS (SE HOUVER)</td>
+                    <td class="trd-val">${ressalvas || 'Sem ressalvas.'}</td>
+                </tr>
+                <tr class="trd-spacer"><td></td><td></td></tr>
+                <tr>
+                    <td class="trd-assin">
+                        <div class="trd-assin-name">${escapeHtml(ASSINATURA_1.nome)}</div>
+                        <div class="trd-assin-role">${escapeHtml(ASSINATURA_1.cargo)}</div>
+                        <div class="trd-assin-comm">${escapeHtml(ASSINATURA_1.comissao)} &nbsp;${escapeHtml(ASSINATURA_1.portaria)}</div>
+                    </td>
+                    <td class="trd-assin">
+                        <div class="trd-assin-name">${escapeHtml(ASSINATURA_2.nome)}</div>
+                        <div class="trd-assin-role">${escapeHtml(ASSINATURA_2.cargo)}</div>
+                        <div class="trd-assin-comm">${escapeHtml(ASSINATURA_2.comissao)}</div>
+                        <div class="trd-assin-comm">${escapeHtml(ASSINATURA_2.portaria)}</div>
+                    </td>
+                </tr>
             </table>
-
-            <h3 class="trd-h3">OBJETO DO CONTRATO</h3>
-            <p class="trd-p">${objeto}</p>
-
-            <h3 class="trd-h3">DATA DO RECEBIMENTO</h3>
-            <p class="trd-p"><strong>${dataRecebimento || '____/____/____'}</strong></p>
-
-            <h3 class="trd-h3">PERÍODO DE APURAÇÃO</h3>
-            <p class="trd-p"><strong>${periodo ? escapeHtml(autoPeriodoLine(periodo, inicio, fim)) : '____________________'}</strong></p>
-
-            <h3 class="trd-h3">VOLUMES E VALORES ENTREGUES</h3>
-            <table class="trd-table-list">
-                <thead>
-                    <tr>
-                        <th class="c w-sm">Nº</th>
-                        <th class="l">Descrição</th>
-                        <th class="c">Und.</th>
-                        <th class="c">Quantidade</th>
-                        <th class="r">Valor Unitário</th>
-                        <th class="r">Valor Total</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    ${itemsRows}
-                    <tr class="trd-total">
-                        <td colspan="5" class="r"><strong>TOTAL</strong></td>
-                        <td class="r"><strong>${formatMoney(total)}</strong></td>
-                    </tr>
-                </tbody>
-            </table>
-
-            <h3 class="trd-h3">DESCRIÇÃO DA ENTREGA</h3>
-            <p class="trd-p">${descricao || '____'}</p>
-
-            <h3 class="trd-h3">MEDIÇÃO DE RESULTADOS</h3>
-            <table class="trd-table-list">
-                <thead>
-                    <tr>
-                        <th class="l">Indicador</th>
-                        <th class="c">Resultado</th>
-                        <th class="c">Meta</th>
-                    </tr>
-                </thead>
-                <tbody>${indRows}</tbody>
-            </table>
-
-            <h3 class="trd-h3">CONFERÊNCIA E AVALIAÇÃO</h3>
-            <p class="trd-p"><strong>${conferenciaStatus}</strong></p>
-
-            <h3 class="trd-h3">RESSALVAS</h3>
-            <p class="trd-p">${ressalvas || '____'}</p>
-
-            <h3 class="trd-h3">COMISSÃO DE RECEBIMENTO</h3>
-            <table class="trd-table-min">
-                ${comissao.map(linha => linha ? `<tr><td class="l">${linha}</td></tr>` : '').join('')}
-            </table>
-
-            <div class="trd-assinaturas">
-                ${(() => comissao.filter(Boolean).slice(0, 2).map(l => `
-                    <div class="trd-assinatura">
-                        <div class="trd-assinatura-linha"></div>
-                        <div class="trd-assinatura-cargo">${l}</div>
-                    </div>`).join(''))()}
-            </div>
         </div>`;
 }
 
@@ -502,7 +529,7 @@ function limparFormulario() {
     document.getElementById('trd-periodo').value = 'Julho/Agosto';
     document.getElementById('trd-descricao').value = '';
     document.getElementById('trd-autocalc').checked = true;
-    document.getElementById('trd-conferencia-status').value = 'RECEBI CONFORME';
+    document.getElementById('trd-conferencia').value = CONFERENCIA_PADRAO;
     document.getElementById('trd-ressalvas').value = 'Sem ressalvas.';
     buildItems();
     buildIndicadores();

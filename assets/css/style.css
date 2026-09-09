@@ -1816,10 +1816,10 @@ body.dark-mode .error-banner {
 }
 
 .trd-document {
-    color: #111111;
-    font-family: 'Times New Roman', Times, serif;
-    font-size: 13px;
-    line-height: 1.45;
+    color: #434343;
+    font-family: 'Roboto', 'Segoe UI', Arial, sans-serif;
+    font-size: 10pt;
+    line-height: 1.4;
 }
 
 .trd-sheet {
@@ -1827,149 +1827,156 @@ body.dark-mode .error-banner {
     padding: 8px 16px 24px;
 }
 
-.trd-header {
-    display: flex;
-    align-items: center;
-    gap: 14px;
-    border-bottom: 2px solid #111;
-    padding-bottom: 8px;
-    margin-bottom: 10px;
+.trd-logo-wrap {
+    text-align: center;
+    margin-bottom: 12px;
 }
 
 .trd-logo {
-    height: 56px;
+    height: 130px;
     width: auto;
     object-fit: contain;
+    max-width: 100%;
 }
 
-.trd-header-titles {
+.trd-main {
+    width: 100%;
+    border-collapse: collapse;
+    border: 1.5px solid #284e3f;
+}
+
+.trd-main td {
+    vertical-align: top;
+}
+
+.trd-titlebar {
+    background-color: #356854;
+    border: 1px solid #284e3f;
+    color: #ffffff;
     text-align: center;
-    flex: 1;
-}
-
-.trd-header-estado {
-    font-size: 12px;
-    letter-spacing: 1px;
-}
-
-.trd-header-orgao {
-    font-size: 14px;
-    font-weight: bold;
-}
-
-.trd-header-doc {
-    font-size: 15px;
-    font-weight: bold;
-    letter-spacing: 0.5px;
-}
-
-.trd-header-contrato {
-    font-size: 12px;
-    font-weight: bold;
-}
-
-.trd-h1 {
-    text-align: center;
-    font-size: 16px;
-    font-weight: bold;
-    margin: 10px 0 14px;
-    color: #111;
-}
-
-.trd-h3 {
-    display: block;
-    font-size: 12px;
-    font-weight: bold;
-    text-transform: uppercase;
+    padding: 8px 12px;
+    font-size: 11pt;
+    font-weight: 700;
     letter-spacing: 0.4px;
-    background: #eee;
-    border-bottom: 1px solid #111;
+}
+
+.trd-lbl {
+    background-color: #f6f8f9;
+    border: 1px solid #cccccc;
+    padding: 5px 8px;
+    font-size: 8.5pt;
+    font-weight: 500;
+    text-transform: uppercase;
+    color: #434343;
+    width: 33%;
+}
+
+.trd-val {
+    background-color: #f6f8f9;
+    border: 1px solid #cccccc;
+    padding: 5px 8px;
+    font-size: 9pt;
+    color: #434343;
+}
+
+.trd-strong {
+    font-weight: 700;
+}
+
+.trd-spacer td {
+    border: 1px solid #cccccc;
+    background-color: #ffffff;
+    height: 10px;
+}
+
+.trd-period-line {
+    text-decoration: underline;
+    margin: 0 0 6px;
+    font-size: 9pt;
+}
+
+.trd-sub-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 0 0 2px;
+}
+
+.trd-sub-table th,
+.trd-sub-table td {
+    border: 1px solid #333333;
     padding: 3px 6px;
-    margin: 14px 0 6px;
-    color: #111;
+}
+
+.trd-sub-table th {
+    background: #dddddd;
+    font-weight: 700;
     text-align: center;
+    font-size: 8.5pt;
 }
 
-.trd-p {
-    margin: 4px 0 8px;
-    text-align: justify;
+.trd-sub-table td {
+    font-family: 'Times New Roman', Times, serif;
+    font-size: 8.5pt;
+    color: #434343;
 }
 
-.trd-table-min {
-    width: 100%;
-    border-collapse: collapse;
-    margin: 4px 0 8px;
-}
-
-.trd-table-min td {
-    border: 1px solid #111;
-    padding: 4px 6px;
-    font-size: 12px;
-}
-
-.trd-table-min td.w {
-    width: 32%;
-    font-weight: bold;
+.trd-sub-table .num {
     text-align: center;
+    white-space: nowrap;
 }
 
-.trd-table-list {
-    width: 100%;
-    border-collapse: collapse;
-    margin: 4px 0 8px;
-}
-
-.trd-table-list th,
-.trd-table-list td {
-    border: 1px solid #111;
-    padding: 4px 6px;
-    font-size: 11.5px;
-}
-
-.trd-table-list th {
-    background: #eee;
-    font-weight: bold;
-}
-
-.trd-table-list .c {
-    text-align: center;
-}
-
-.trd-table-list .l {
+.trd-sub-table .desc {
     text-align: left;
 }
 
-.trd-table-list .r {
+.trd-sub-table .money {
     text-align: right;
+    white-space: nowrap;
 }
 
-.trd-table-list .w-sm {
-    width: 36px;
+.trd-sub-table .total td {
+    font-weight: 700;
+    text-align: right;
+    background: #f2f2f2;
 }
 
-.trd-table-list tr.trd-total td {
-    border-top: 2px solid #111;
-    font-weight: bold;
-    background: #f7f7f7;
+.trd-sub-table.ind th {
+    background: #d9d9d9;
+    text-align: left;
 }
 
-.trd-assinaturas {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 40px;
-    margin-top: 40px;
+.trd-sub-table.ind td {
+    font-family: 'Roboto', 'Segoe UI', Arial, sans-serif;
+    font-size: 8.5pt;
+}
+
+.trd-sub-table .ind {
+    text-align: left;
+}
+
+.trd-assin {
+    background-color: #ffffff;
+    border: 1px solid #cccccc;
+    padding: 24px 8px 6px;
     text-align: center;
+    width: 50%;
 }
 
-.trd-assinatura-linha {
-    border-bottom: 1px solid #111;
-    height: 56px;
-    margin-bottom: 6px;
+.trd-assin-name {
+    font-weight: 700;
+    font-size: 9pt;
+    color: #434343;
+    margin-bottom: 2px;
 }
 
-.trd-assinatura-cargo {
-    font-size: 11px;
-    line-height: 1.3;
+.trd-assin-role {
+    font-size: 8.5pt;
+    color: #434343;
+}
+
+.trd-assin-comm {
+    font-size: 8pt;
+    color: #434343;
 }
 
 @media (max-width: 980px) {
@@ -2054,24 +2061,18 @@ body.dark-mode .error-banner {
     }
 
     .trd-document {
-        font-size: 12pt;
+        font-size: 10pt;
     }
 
     .trd-sheet {
         padding: 0;
     }
 
-    .trd-header {
-        border-bottom: 2px solid #000;
+    .trd-logo {
+        height: 110px;
     }
 
-    .trd-table-list th,
-    .trd-table-list td,
-    .trd-table-min td {
-        border-color: #000;
-    }
-
-    .trd-table-list thead {
+    .trd-sub-table thead {
         display: table-header-group;
     }
 
@@ -2080,16 +2081,16 @@ body.dark-mode .error-banner {
         page-break-inside: auto;
     }
 
-    .trd-h3 {
+    .trd-titlebar {
         page-break-after: avoid;
     }
 
-    .trd-table-list tr,
-    .trd-table-min tr {
+    .trd-sub-table tr,
+    .trd-main > tr {
         page-break-inside: avoid;
     }
 
-    .trd-assinaturas {
-        margin-top: 60px;
+    .trd-assin {
+        padding-top: 40px;
     }
 }
