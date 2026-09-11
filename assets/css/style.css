@@ -16,10 +16,14 @@
     --success-color: #16A34A;
     --bg-color: #E8EDF4;
     --box-bg: #FFFFFF;
+    --box-bg-rgb: 255, 255, 255;
     --surface-2: #F1F5F9;
     --text-color: #1E293B;
     --border-color: #DCE2EA;
+    --border-color-rgb: 220, 226, 234;
     --input-bg: #FFFFFF;
+    --blob-1: rgba(37, 99, 235, 0.10);
+    --blob-2: rgba(124, 58, 237, 0.08);
     --due-bg: #E7F5EC;
     --due-border: #A7D8B8;
     --dropdown-bg: #FFFFFF;
@@ -42,10 +46,14 @@ body.dark-mode {
     --success-color: #34D399;
     --bg-color: #0B1220;
     --box-bg: #121B2D;
+    --box-bg-rgb: 15, 24, 40;
     --surface-2: #16213A;
     --text-color: #E2E8F0;
     --border-color: #26334D;
+    --border-color-rgb: 38, 51, 77;
     --input-bg: #0F1828;
+    --blob-1: rgba(96, 165, 250, 0.12);
+    --blob-2: rgba(167, 139, 250, 0.10);
     --due-bg: #14371F;
     --due-border: #2E6B46;
     --dropdown-bg: #16213A;
@@ -87,6 +95,18 @@ body {
     justify-content: flex-start !important;
     padding: 0 !important;
     background-color: var(--bg-color);
+    position: relative;
+    background-image:
+        radial-gradient(circle at 12% 45%, var(--blob-1) 0%, transparent 50%),
+        radial-gradient(circle at 88% 18%, var(--blob-2) 0%, transparent 50%);
+    background-repeat: no-repeat, no-repeat;
+    background-size: 55% 55%, 50% 50%;
+    animation: bgDrift 22s ease-in-out infinite alternate;
+}
+
+@keyframes bgDrift {
+    0% { background-position: 8% 22%, 92% 8%; }
+    100% { background-position: 18% 8%, 82% 22%; }
 }
 
 /* Login Screen */
@@ -213,9 +233,11 @@ body.dark-mode .btn-google-login:hover {
     position: sticky;
     top: 0;
     z-index: 100;
-    background-color: var(--box-bg);
-    border-bottom: 1px solid var(--border-color);
-    box-shadow: var(--shadow-sm);
+    background-color: rgba(var(--box-bg-rgb), 0.84);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+    border-bottom: none;
+    box-shadow: none;
 }
 
 .header-inner {
@@ -479,8 +501,14 @@ body.dark-mode .btn-google-login:hover {
    ============================================= */
 
 .main-nav {
-    background-color: var(--box-bg);
-    border-bottom: 1px solid var(--border-color);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background-color: rgba(var(--box-bg-rgb), 0.84);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+    border-top: none;
+    border-bottom: 1px solid rgba(var(--border-color-rgb), 0.45);
     box-shadow: var(--shadow-sm);
 }
 
