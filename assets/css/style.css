@@ -96,17 +96,6 @@ body {
     padding: 0 !important;
     background-color: var(--bg-color);
     position: relative;
-    background-image:
-        radial-gradient(circle at 12% 45%, var(--blob-1) 0%, transparent 50%),
-        radial-gradient(circle at 88% 18%, var(--blob-2) 0%, transparent 50%);
-    background-repeat: no-repeat, no-repeat;
-    background-size: 55% 55%, 50% 50%;
-    animation: bgDrift 22s ease-in-out infinite alternate;
-}
-
-@keyframes bgDrift {
-    0% { background-position: 8% 22%, 92% 8%; }
-    100% { background-position: 18% 8%, 82% 22%; }
 }
 
 /* Login Screen */
@@ -501,9 +490,6 @@ body.dark-mode .btn-google-login:hover {
    ============================================= */
 
 .main-nav {
-    position: sticky;
-    top: 0;
-    z-index: 100;
     background-color: rgba(var(--box-bg-rgb), 0.84);
     backdrop-filter: blur(18px);
     -webkit-backdrop-filter: blur(18px);
@@ -988,6 +974,54 @@ body.dark-mode .scroll-top-btn {
         width: 46px;
         height: 46px;
     }
+}
+
+/* =============================================
+   PARTICULAS (FASELAS AZUIS FLUTUANTES)
+   ============================================= */
+
+.sparkles {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    overflow: hidden;
+    mask-image: linear-gradient(to bottom, transparent, black 10%, black 90%, transparent);
+    -webkit-mask-image: linear-gradient(to bottom, transparent, black 10%, black 90%, transparent);
+}
+
+.sparkle-layer,
+.sparkle-layer-fast {
+    position: absolute;
+    inset: 0;
+}
+
+.sparkle {
+    position: absolute;
+    border-radius: 50%;
+    pointer-events: none;
+    animation: sparkleUp linear infinite;
+}
+
+.sparkle-layer .sparkle {
+    width: 4px;
+    height: 4px;
+    background: rgba(147, 197, 253, 0.55);
+    box-shadow: 0 0 6px rgba(147, 197, 253, 0.35);
+}
+
+.sparkle-layer-fast .sparkle {
+    width: 2.5px;
+    height: 2.5px;
+    background: rgba(191, 219, 254, 0.4);
+    box-shadow: 0 0 5px rgba(147, 197, 253, 0.25);
+}
+
+@keyframes sparkleUp {
+    0%   { transform: translateY(0); opacity: 0; }
+    12%  { opacity: 0.6; }
+    88%  { opacity: 0.6; }
+    100% { transform: translateY(-100vh); opacity: 0; }
 }
 
 /* =============================================
