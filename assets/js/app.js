@@ -56,31 +56,6 @@ async function initApp(user) {
     }
 }
 
-function initSparkles() {
-    const appScreen = document.getElementById('app-screen');
-    if (!appScreen) return;
-    const container = document.createElement('div');
-    container.className = 'sparkles';
-
-    const makeLayer = (cls, count, durMin, durMax) => {
-        const layer = document.createElement('div');
-        layer.className = cls;
-        for (let i = 0; i < count; i++) {
-            const dot = document.createElement('div');
-            dot.className = 'sparkle';
-            dot.style.left = Math.random() * 100 + '%';
-            dot.style.animationDuration = (durMin + Math.random() * (durMax - durMin)) + 's';
-            dot.style.animationDelay = (-Math.random() * 15) + 's';
-            layer.appendChild(dot);
-        }
-        return layer;
-    };
-
-    container.appendChild(makeLayer('sparkle-layer', 9, 14, 20));
-    container.appendChild(makeLayer('sparkle-layer-fast', 8, 8, 12));
-    appScreen.prepend(container);
-}
-
 function setupEventListeners() {
     document.getElementById('btn-google-login')?.addEventListener('click', () => {
         signInWithGoogle().catch(err => {
@@ -98,8 +73,6 @@ function setupEventListeners() {
             scrollTopBtn.classList.toggle('visible', show);
         }, { passive: true });
     }
-
-    initSparkles();
 
     document.getElementById('btn-logout')?.addEventListener('click', async () => {
         if (confirm('Tem certeza que deseja sair?')) {
