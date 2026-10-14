@@ -199,12 +199,12 @@ function aplicarRemocao() {
         return;
     }
     const cleanText = input.replace(/[^\w\sÀ-ÿ]/gi, '');
-    document.getElementById('remover-output-text').innerText = cleanText;
+    document.getElementById('remover-output-text').textContent = cleanText;
     document.getElementById('remover-output-box').style.display = 'flex';
 }
 
 async function copiarRemocao() {
-    const texto = document.getElementById('remover-output-text').innerText;
+    const texto = document.getElementById('remover-output-text').textContent;
     const ok = await copyToClipboard(texto);
     if (ok) toast('Texto copiado.', 'success');
     else toast('Nao foi possivel copiar. Copie manualmente.', 'error');
@@ -213,7 +213,7 @@ async function copiarRemocao() {
 function limparRemocao() {
     document.getElementById('remover-input').value = '';
     document.getElementById('remover-output-box').style.display = 'none';
-    document.getElementById('remover-output-text').innerText = '';
+    document.getElementById('remover-output-text').textContent = '';
 }
 
 function atualizarConversaoHoras() {
@@ -254,7 +254,7 @@ function atualizarConversaoHoras() {
 
 async function copiarResultadoHoras(resultId) {
     const resultEl = document.getElementById(resultId);
-    const texto = resultEl.innerText;
+    const texto = resultEl.textContent;
     if (!texto || texto === '—' || texto === 'Formato invalido') {
         toast('Nada para copiar ainda.', 'warning');
         return;

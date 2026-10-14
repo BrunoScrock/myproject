@@ -109,6 +109,12 @@ export function renderFixedNotes() {
         }
         listContainer.appendChild(noteDiv);
     });
+
+    // A textarea de edicao cresce com o conteudo, igual aos demais campos
+    listContainer.querySelectorAll('.fixed-note-edit-textarea').forEach(el => {
+        if (typeof autoGrow === 'function') autoGrow(el);
+        el.addEventListener('input', () => autoGrow(el));
+    });
 }
 
 export function showFixedNoteForm() {
@@ -268,7 +274,7 @@ export async function moveFixedNote(index, direction) {
 export async function copyFixedNote(buttonElement) {
     const noteDiv = buttonElement.closest('.fixed-note-item');
     const textElement = noteDiv.querySelector('.fixed-note-text');
-    const textToCopy = textElement.innerText;
+    const textToCopy = textElement.textContent;
 
     const ok = await copyToClipboard(textToCopy);
     if (ok) {

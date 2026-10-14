@@ -99,7 +99,7 @@ export function gerarEprotocolo() {
         textoGerado = `    I - Restitui-se ao setor de origem ao(à) ${cargo} ${nome} para que seja informado o perfil de acesso a ser concedido no ${sistemasFormatadosAusencia}.\n\n    II - Após, encaminha-se à PGE/CGTI/NII aos cuidados do servidor Bruno Batista Scrock.`;
     }
 
-    document.getElementById('epro-output-text').innerText = textoGerado;
+    document.getElementById('epro-output-text').textContent = textoGerado;
     setEproOutputVisible(true);
     toast('Despacho gerado.', 'success');
 }
@@ -118,13 +118,13 @@ export async function limparEprotocolo() {
     document.getElementById('epro-nome-ausencia').value = '';
     document.querySelectorAll('#epro-sistemas-group-ausencia input[type="checkbox"]').forEach(cb => cb.checked = false);
 
-    document.getElementById('epro-output-text').innerText = '';
+    document.getElementById('epro-output-text').textContent = '';
     setEproOutputVisible(false);
     toast('Campos limpos.', 'info');
 }
 
 export async function copiarEprotocolo() {
-    const texto = document.getElementById('epro-output-text').innerText;
+    const texto = document.getElementById('epro-output-text').textContent;
     if (!texto.trim()) {
         toast('Gere o despacho antes de copiar.', 'warning');
         return;

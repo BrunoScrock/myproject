@@ -71,7 +71,7 @@
                     </div>
                 </div>
 
-                <nav class="main-nav" aria-label="Navegação principal">
+                <nav id="main-nav" class="main-nav" aria-label="Navegação principal">
                     <div class="nav-inner">
 
                         <div class="nav-group">
@@ -125,7 +125,7 @@
             <div class="app-main">
 
                 <!-- CABECALHO / TOPBAR -->
-                <header class="app-header">
+                <header id="app-header" class="app-header">
                     <div class="header-inner">
                         <button id="btn-sidebar-toggle" class="topbar-icon-btn" title="Recolher menu" aria-label="Recolher menu">
                             <span class="material-symbols-rounded">menu_open</span>
@@ -163,7 +163,7 @@
                 </header>
 
                 <!-- CONTEUDO PRINCIPAL -->
-                <main class="main-content">
+                <main id="main-content" class="main-content">
 
                     <!-- ============ TAB: TAREFAS & ANOTACOES ============ -->
                     <div id="tab-tarefas" class="tab-content active">
@@ -224,21 +224,7 @@
                                     </div>
                                 </section>
 
-                                <!-- PAINEL: TAREFAS AGENDADAS -->
-                                <section class="panel" id="panel-agendadas">
-                                    <header class="panel-head">
-                                        <div class="panel-title">
-                                            <span class="material-symbols-rounded">calendar_month</span>
-                                            <h2>Tarefas Agendadas</h2>
-                                        </div>
-                                        <button id="add-scheduled-btn" class="btn btn-secondary btn-sm">
-                                            <span class="material-symbols-rounded">add</span> Agendar tarefa
-                                        </button>
-                                    </header>
-                                    <div class="scheduled-list" id="scheduled-list"></div>
-                                </section>
-
-                            </div>
+                                </div>
 
                             <!-- COLUNA LATERAL -->
                             <div class="workspace-col-side">
@@ -275,6 +261,20 @@
                                             </button>
                                         </div>
                                     </div>
+                                </section>
+
+                                <!-- PAINEL: TAREFAS AGENDADAS -->
+                                <section class="panel" id="panel-agendadas">
+                                    <header class="panel-head">
+                                        <div class="panel-title">
+                                            <span class="material-symbols-rounded">calendar_month</span>
+                                            <h2>Tarefas Agendadas</h2>
+                                        </div>
+                                        <button id="add-scheduled-btn" class="btn btn-secondary btn-sm">
+                                            <span class="material-symbols-rounded">add</span> Agendar
+                                        </button>
+                                    </header>
+                                    <div class="scheduled-list" id="scheduled-list"></div>
                                 </section>
 
                             </div>
@@ -403,7 +403,7 @@
                                     <div class="output-box" id="epro-output-box" style="display:none;">
                                         <div class="output-text" id="epro-output-text"></div>
                                     </div>
-                                    <div class="epro-empty" id="epro-empty">
+                                    <div class="epro-empty" id="epro-empty" style="display:flex;">
                                         <span class="material-symbols-rounded">edit_note</span>
                                         <p>Preencha os campos ao lado e clique em <strong>Aplicar</strong> para gerar o despacho.</p>
                                     </div>
@@ -711,7 +711,7 @@
                 </main>
 
                 <!-- RODAPE -->
-                <footer class="app-footer">
+                <footer id="app-footer" class="app-footer">
                     <div class="footer-bar">
                         <span class="footer-brand">Sistema de Anotações</span>
                         <span class="footer-meta">Bruno Scrock · v2.0.0</span>

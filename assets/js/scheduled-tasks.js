@@ -118,6 +118,13 @@ export function renderScheduledTasks() {
             const displayDate = task.due_date
                 ? task.due_date.split('-').reverse().join('/')
                 : 'Sem data definida';
+
+            const emailChip = task.email_sent
+                ? `<span class="chip chip-muted" title="Aviso por e-mail ja enviado">
+                       <span class="material-symbols-rounded">mark_email_read</span> Aviso enviado
+                   </span>`
+                : '';
+
             cardDiv.innerHTML = `
                 <div class="view-actions">
                     <button class="btn-edit" onclick="window.ScheduledTasksModule.toggleEditMode('${task.id}', true)" title="Editar Tarefa">
@@ -134,6 +141,7 @@ export function renderScheduledTasks() {
                 <div class="view-details">${escapeHtml(task.description || '(Sem descricao)')}</div>
                 <div class="scheduled-date-group">
                     <span class="material-symbols-rounded">event</span> Data Final: ${displayDate}
+                    ${emailChip}
                 </div>
             `;
         }
@@ -145,7 +153,7 @@ export function renderScheduledTasks() {
     if (badge) {
         if (dueCount > 0) {
             badge.style.display = 'flex';
-            badge.innerText = dueCount;
+            badge.textContent = dueCount;
         } else {
             badge.style.display = 'none';
         }
