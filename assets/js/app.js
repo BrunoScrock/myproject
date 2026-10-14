@@ -175,8 +175,8 @@ function toggleTheme() {
     const themeIcon = document.getElementById('theme-icon');
     const themeText = document.getElementById('theme-text');
 
-    if (themeIcon) themeIcon.innerText = isDark ? 'light_mode' : 'dark_mode';
-    if (themeText) themeText.innerText = isDark ? 'Modo Claro' : 'Modo Escuro';
+    if (themeIcon) themeIcon.textContent = isDark ? 'light_mode' : 'dark_mode';
+    if (themeText) themeText.textContent = isDark ? 'Modo Claro' : 'Modo Escuro';
     localStorage.setItem('appTheme', isDark ? 'dark' : 'light');
 }
 
@@ -186,8 +186,8 @@ function loadTheme() {
         document.body.classList.add('dark-mode');
         const themeIcon = document.getElementById('theme-icon');
         const themeText = document.getElementById('theme-text');
-        if (themeIcon) themeIcon.innerText = 'light_mode';
-        if (themeText) themeText.innerText = 'Modo Claro';
+        if (themeIcon) themeIcon.textContent = 'light_mode';
+        if (themeText) themeText.textContent = 'Modo Claro';
     }
 }
 
