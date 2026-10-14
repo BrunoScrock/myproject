@@ -1,3 +1,5 @@
+import { toast, confirmAction } from './ui.js';
+
 const MESES = ['janeiro', 'fevereiro', 'março', 'abril', 'maio', 'junho', 'julho', 'agosto', 'setembro', 'outubro', 'novembro', 'dezembro'];
 
 const ITENS_PADRAO = [
@@ -511,7 +513,7 @@ function validateBeforePrint() {
 function gerarPDF() {
     const missing = validateBeforePrint();
     if (missing.length) {
-        alert('Preencha os campos obrigatórios antes de gerar o PDF:\n\n• ' + missing.join('\n• '));
+        showValidationReport(missing);
         return;
     }
     updatePreview();
@@ -522,7 +524,38 @@ function gerarPDF() {
     document.title = prev;
 }
 
-function limparFormulario() {
+/**
+ * Exibe os campos obrigatorios pendentes junto ao formulario,
+ * destacando o primeiro item para orientar o preenchimento.
+ */
+function showValidationReport(missing) {
+    const descricao = document.getElementById('trd-descricao');
+    if (missing.includes('Descrição da Entrega') && descricao) {
+        descricao.focus();
+    } else if (missing.includes('Data do Recebimento')) {
+        document.getElementById('trd-data-recebimento')?.focus();
+    } else if (missing.includes('Data Inicial')) {
+        document.getElementById('trd-data-inicio')?.focus();
+    } else if (missing.includes('Data Final')) {
+        document.getElementById('trd-data-fim')?.focus();
+    } else if (missing.includes('Período')) {
+        document.getElementById('trd-periodo')?.focus();
+    }
+
+    toast(
+        `Preencha antes de gerar o PDF: ${missing.join(', ')}.`,
+        'warning',
+        6500
+    );
+}
+
+async function limparFormulario() {
+    const ok = await confirmAction(
+        'Deseja limpar o formulario e restaurar os valores padrao do termo?',
+        'Limpar formulario'
+    );
+    if (!ok) return;
+
     document.getElementById('trd-data-recebimento').value = '';
     document.getElementById('trd-data-inicio').value = '';
     document.getElementById('trd-data-fim').value = '';
@@ -535,4 +568,5 @@ function limparFormulario() {
     buildIndicadores();
     updateTotalsRows();
     updatePreview();
+    toast('Formulario restaurado.', 'info');
 }

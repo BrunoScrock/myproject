@@ -6,16 +6,29 @@ Sistema pessoal web para organização de tarefas, anotações e geração de de
 
 - **Tarefas do Dia** - Crie, edite, copie e exclua tarefas diárias
 - **Tarefas Agendadas** - Programe tarefas com data final e receba notificações
-- **Auditoria do Sistema** - Histórico completo de tudo que foi criado, alterado ou excluído (veja [docs/audit.sql](docs/audit.sql))
+- **Auditoria do Sistema** - Histórico completo em tabela, com filtros e diff por campo (veja [docs/audit.sql](docs/audit.sql))
 - **Anotações Fixas** - Mantenha anotações importantes organizadas com cores
 - **Gerador de Despachos** - Gere despachos para Liberação de Sistema e Ausência de Perfil
+- **Termo de Recebimento** - Documento oficial PGE com prévia A4 e exportação em PDF
 - **Conversor de Horas** - Converta entre horário normal (H:MM) e horas decimais, e vice-versa
 - **Removedor de Caracteres** - Limpe números, CPFs, processos etc.
 - **Modo Claro/Escuro** - Tema personalizável
 - **Autenticação Google** - Login seguro via Supabase Auth
 - **Banco de Dados Persistente** - Dados salvos no Supabase PostgreSQL
 - **Migração Automática** - Importe dados do localStorage antigo
-- **Responsivo** - Funciona em desktop, notebook, tablet e celular
+- **Interface Desktop** - Layout em sidebar + área de conteúdo, otimizado para 1280px ou mais
+
+## Interface
+
+O sistema usa uma interface **desktop-first** com:
+
+- **Sidebar recolhível** com menu agrupado (Operação / Documentos / Utilidades), com estado persistido
+- **Topbar** com título da página, breadcrumb, atalhos e identificação do usuário
+- **Área de conteúdo de largura total** (até 1760px) para aproveitar a tela
+- **Tema Grafite + Esmeralda** centralizado em custom properties CSS (`--brand`, `--surface`, `--text`, …)
+- **Estados de feedback**: toasts para sucesso/erro/aviso e diálogo de confirmação próprio
+
+Em janelas menores que 1080px o sistema exibe um aviso informando que a experiência foi desenhada para desktop.
 
 ## Pré-requisitos
 

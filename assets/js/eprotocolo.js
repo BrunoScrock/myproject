@@ -1,11 +1,22 @@
 import { getCurrentUser } from './auth.js';
 import { getSupabase } from './supabase.js';
+import { toast, confirmAction, copyToClipboard } from './ui.js';
 
 export function mudarCategoriaEprotocolo() {
     const categoria = document.getElementById('epro-categoria').value;
     document.getElementById('form-liberacao').style.display = categoria === 'liberacao' ? 'grid' : 'none';
     document.getElementById('form-ausencia').style.display = categoria === 'ausencia' ? 'grid' : 'none';
-    document.getElementById('epro-output-box').style.display = 'none';
+    setEproOutputVisible(false);
+}
+
+/** Mostra/oculta o resultado gerado e o estado vazio, mantendo o botao copiar coerente */
+function setEproOutputVisible(visible) {
+    const box = document.getElementById('epro-output-box');
+    const empty = document.getElementById('epro-empty');
+    const copyBtn = document.getElementById('btn-copy-epro');
+    if (box) box.style.display = visible ? 'flex' : 'none';
+    if (empty) empty.style.display = visible ? 'none' : 'flex';
+    if (copyBtn) copyBtn.disabled = !visible;
 }
 
 export function formatarNome(inputId) {
@@ -43,7 +54,7 @@ export function gerarEprotocolo() {
         if (extraInfo !== '') sistemasSelecionados.push(extraInfo);
 
         if (!mov || sistemasSelecionados.length === 0 || !cargo || !nome) {
-            alert("Por favor, preencha o MOV, selecione ao menos um sistema, o cargo e o nome.");
+            toast('Preencha o MOV, selecione ao menos um sistema, o cargo e o nome.', 'warning', 5000);
             return;
         }
 
@@ -73,7 +84,7 @@ export function gerarEprotocolo() {
         let sistemasSelecionadosAusencia = Array.from(checkboxesAusencia).map(cb => cb.value);
 
         if (!cargo || !nome || sistemasSelecionadosAusencia.length === 0) {
-            alert("Por favor, selecione o cargo, o nome do interessado e ao menos um sistema pendente.");
+            toast('Selecione o cargo, o nome do interessado e ao menos um sistema pendente.', 'warning', 5000);
             return;
         }
 
@@ -89,11 +100,13 @@ export function gerarEprotocolo() {
     }
 
     document.getElementById('epro-output-text').innerText = textoGerado;
-    document.getElementById('epro-output-box').style.display = 'flex';
+    setEproOutputVisible(true);
+    toast('Despacho gerado.', 'success');
 }
 
-export function limparEprotocolo() {
-    if (!confirm('Tem certeza que deseja limpar todos os campos?')) return;
+export async function limparEprotocolo() {
+    const ok = await confirmAction('Deseja limpar todos os campos do despacho?', 'Limpar formulario');
+    if (!ok) return;
 
     document.getElementById('epro-mov').value = '';
     document.getElementById('epro-cargo').selectedIndex = 0;
@@ -105,22 +118,20 @@ export function limparEprotocolo() {
     document.getElementById('epro-nome-ausencia').value = '';
     document.querySelectorAll('#epro-sistemas-group-ausencia input[type="checkbox"]').forEach(cb => cb.checked = false);
 
-    document.getElementById('epro-output-box').style.display = 'none';
+    document.getElementById('epro-output-text').innerText = '';
+    setEproOutputVisible(false);
+    toast('Campos limpos.', 'info');
 }
 
-export function copiarEprotocolo() {
+export async function copiarEprotocolo() {
     const texto = document.getElementById('epro-output-text').innerText;
-    navigator.clipboard.writeText(texto).then(() => {
-        const copyBtn = document.querySelector('#epro-output-box .btn-copy');
-        const originalBg = copyBtn.style.backgroundColor;
-        const originalHtml = copyBtn.innerHTML;
-        copyBtn.style.backgroundColor = document.body.classList.contains('dark-mode') ? '#2e5c3a' : '#2ECC71';
-        copyBtn.innerHTML = '<span class="material-symbols-rounded">check</span> Copiado!';
-        setTimeout(() => {
-            copyBtn.style.backgroundColor = originalBg;
-            copyBtn.innerHTML = originalHtml;
-        }, 1500);
-    });
+    if (!texto.trim()) {
+        toast('Gere o despacho antes de copiar.', 'warning');
+        return;
+    }
+    const ok = await copyToClipboard(texto);
+    if (ok) toast('Despacho copiado.', 'success');
+    else toast('Nao foi possivel copiar.', 'error');
 }
 
 export async function salvarNoHistorico() {
@@ -142,10 +153,10 @@ export async function salvarNoHistorico() {
         });
 
     if (error) {
-        console.error('Erro ao salvar no histórico:', error.message);
-        alert('Erro ao salvar no histórico.');
+        console.error('Erro ao salvar no historico:', error.message);
+        toast('Erro ao salvar no historico.', 'error');
         return;
     }
 
-    alert('Despacho salvo no histórico!');
+    toast('Despacho salvo no historico!', 'success');
 }

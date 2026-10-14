@@ -1,4 +1,5 @@
 import { getSupabase } from './supabase.js';
+import { toast } from './ui.js';
 
 const TABLE_LABELS = {
     tasks: 'Tarefas do Dia',
@@ -8,6 +9,18 @@ const TABLE_LABELS = {
     dispatch_history: 'Histórico de Despachos'
 };
 
+const OP_LABELS = {
+    INSERT: 'Criação',
+    UPDATE: 'Alteração',
+    DELETE: 'Exclusão'
+};
+
+const OP_ICONS = {
+    INSERT: 'add',
+    UPDATE: 'edit',
+    DELETE: 'delete'
+};
+
 const HIDDEN_FIELDS = ['id', 'user_id', 'created_at', 'updated_at', 'is_editing'];
 
 const PAGE_SIZE = 20;
@@ -15,6 +28,7 @@ const PAGE_SIZE = 20;
 let allEntries = [];
 let currentPage = 1;
 let lastFilterKey = '';
+let expandedRows = new Set();
 
 export async function loadAuditLog() {
     const { data, error } = await getSupabase()
@@ -28,7 +42,8 @@ export async function loadAuditLog() {
             showAuditMessage('A tabela de auditoria ainda não existe no banco. Rode o script docs/audit.sql no SQL Editor do Supabase e atualize.');
         } else {
             console.error('Erro ao carregar auditoria:', error.message);
-            showAuditMessage('Erro ao carregar auditoria: ' + error.message);
+            showAuditMessage('Não foi possível carregar a auditoria. Verifique sua conexão.');
+            toast('Erro ao carregar a auditoria.', 'error');
         }
         allEntries = [];
         currentPage = 1;
@@ -45,11 +60,14 @@ function showAuditMessage(message) {
     const list = document.getElementById('audit-list');
     const empty = document.getElementById('audit-empty');
     const countEl = document.getElementById('audit-count');
+    const wrap = document.querySelector('.audit-table-wrap');
     if (list) list.innerHTML = '';
     if (countEl) countEl.textContent = '';
+    if (wrap) wrap.style.display = message.includes('ainda não existe') ? 'none' : '';
     if (empty) {
         empty.style.display = 'block';
-        empty.textContent = message;
+        const p = empty.querySelector('p');
+        if (p) p.textContent = message;
     }
 }
 
@@ -83,6 +101,7 @@ export function renderAuditEntries() {
     const list = document.getElementById('audit-list');
     const empty = document.getElementById('audit-empty');
     const countEl = document.getElementById('audit-count');
+    const wrap = document.querySelector('.audit-table-wrap');
 
     if (!list) return;
     if (countEl) countEl.textContent = entries.length === 1 ? '1 registro' : `${entries.length} registros`;
@@ -91,20 +110,24 @@ export function renderAuditEntries() {
     if (entries.length === 0) {
         if (empty) {
             empty.style.display = 'block';
-            empty.textContent = 'Nenhum registro encontrado para os filtros escolhidos.';
+            const p = empty.querySelector('p');
+            if (p) p.textContent = 'Nenhum registro encontrado para os filtros escolhidos.';
         }
         renderAuditPagination(0);
         return;
     }
 
     if (empty) empty.style.display = 'none';
+    if (wrap) wrap.style.display = '';
 
     const totalPages = Math.ceil(entries.length / PAGE_SIZE);
     if (currentPage > totalPages) currentPage = totalPages;
     const start = (currentPage - 1) * PAGE_SIZE;
     const pageEntries = entries.slice(start, start + PAGE_SIZE);
 
-    pageEntries.forEach(e => list.appendChild(buildAuditItem(e)));
+    const frag = document.createDocumentFragment();
+    pageEntries.forEach(e => frag.appendChild(buildAuditRow(e)));
+    list.appendChild(frag);
     renderAuditPagination(totalPages);
 }
 
@@ -150,61 +173,122 @@ function renderAuditPagination(totalPages) {
     container.append(prev, info, next);
 }
 
-function buildAuditItem(entry) {
-    const div = document.createElement('div');
-    div.className = `audit-item audit-op-${(entry.operation || '').toLowerCase()}`;
+function rowKey(entry) {
+    return `${entry.created_at}-${entry.operation}-${entry.record_id ?? ''}`;
+}
 
-    const header = document.createElement('div');
-    header.className = 'audit-item-header';
+/**
+ * Monta a linha principal da tabela. O diff fica numa linha extra,
+ * revelada sob demanda pelo botao de campos — mantem a tabela compacta.
+ */
+function buildAuditRow(entry) {
+    const tr = document.createElement('tr');
+    const op = (entry.operation || '').toUpperCase();
+    tr.className = `audit-op-${op.toLowerCase()}`;
 
-    const badge = document.createElement('span');
-    badge.className = 'audit-badge';
-    badge.textContent = entry.operation || '';
+    const key = rowKey(entry);
+    const expanded = expandedRows.has(key);
+    const diff = buildDiffLines(entry);
 
-    const table = document.createElement('span');
-    table.className = 'audit-table';
-    table.textContent = TABLE_LABELS[entry.table_name] || entry.table_name;
-
+    const tdWhen = document.createElement('td');
+    tdWhen.className = 'col-when';
     const time = document.createElement('span');
     time.className = 'audit-time';
     time.textContent = formatDateTime(entry.created_at);
+    tdWhen.appendChild(time);
 
-    header.append(badge, table, time);
-    div.appendChild(header);
+    const tdOp = document.createElement('td');
+    tdOp.className = 'col-op';
+    const badge = document.createElement('span');
+    badge.className = 'audit-badge';
+    const icon = document.createElement('span');
+    icon.className = 'material-symbols-rounded';
+    icon.textContent = OP_ICONS[op] || 'help';
+    badge.append(icon, OP_LABELS[op] || entry.operation || '');
+    tdOp.appendChild(badge);
 
-    const meta = document.createElement('div');
-    meta.className = 'audit-meta';
+    const tdTable = document.createElement('td');
+    tdTable.className = 'col-table';
+    const tableName = document.createElement('span');
+    tableName.className = 'audit-table-name';
+    tableName.textContent = TABLE_LABELS[entry.table_name] || entry.table_name;
+    tdTable.appendChild(tableName);
+
+    const tdRecord = document.createElement('td');
+    tdRecord.className = 'col-record col-record-cell';
     const rid = entry.record_id ? String(entry.record_id) : '-';
-    meta.textContent = 'Registro: ' + (rid.length > 13 ? rid.slice(0, 13) + '…' : rid);
-    div.appendChild(meta);
+    const meta = document.createElement('span');
+    meta.className = 'audit-meta';
+    meta.textContent = rid.length > 13 ? rid.slice(0, 13) + '\u2026' : rid;
+    tdRecord.appendChild(meta);
 
-    const diff = buildDiff(entry);
-    if (diff) div.appendChild(diff);
+    const tdActions = document.createElement('td');
+    tdActions.className = 'audit-row-actions';
+    if (diff) {
+        const toggle = document.createElement('button');
+        toggle.className = 'audit-diff-toggle';
+        toggle.setAttribute('aria-expanded', String(expanded));
+        const icon2 = document.createElement('span');
+        icon2.className = 'material-symbols-rounded';
+        icon2.textContent = 'expand_more';
+        toggle.append(icon2, document.createTextNode(diff.length === 1 ? '1 campo' : `${diff.length} campos`));
+        toggle.addEventListener('click', () => {
+            if (expandedRows.has(key)) expandedRows.delete(key);
+            else expandedRows.add(key);
+            renderAuditEntries();
+        });
+        tdActions.appendChild(toggle);
+    } else {
+        const dash = document.createElement('span');
+        dash.className = 'audit-meta';
+        dash.textContent = '\u2014';
+        tdActions.appendChild(dash);
+    }
 
-    return div;
+    tr.append(tdWhen, tdOp, tdTable, tdRecord, tdActions);
+
+    if (diff && expanded) {
+        tr.appendChild(buildDiffRow(diff));
+    }
+    return tr;
 }
 
-function buildDiff(entry) {
+function buildDiffRow(lines) {
+    const tr = document.createElement('tr');
+    tr.className = 'audit-diff-row';
+
+    const td = document.createElement('td');
+    td.colSpan = 5;
+
+    const box = document.createElement('div');
+    box.className = 'audit-diff';
+    lines.forEach(line => box.appendChild(line));
+
+    td.appendChild(box);
+    tr.appendChild(td);
+    return tr;
+}
+
+function buildDiffLines(entry) {
     const oldData = entry.old_data || {};
     const newData = entry.new_data || {};
     const keys = new Set(
         [...Object.keys(oldData), ...Object.keys(newData)].filter(k => !HIDDEN_FIELDS.includes(k))
     );
 
-    if (keys.size === 0) return null;
+    if (keys.size === 0) return [];
 
-    const wrapper = document.createElement('div');
-    wrapper.className = 'audit-diff';
-
-    Array.from(keys).sort((a, b) => a.localeCompare(b)).forEach(k => {
-        const row = document.createElement('div');
-        row.className = 'audit-diff-row';
+    return Array.from(keys).sort((a, b) => a.localeCompare(b)).map(k => {
+        const line = document.createElement('div');
+        line.className = 'audit-diff-line';
 
         const keyEl = document.createElement('span');
         keyEl.className = 'k';
         keyEl.textContent = k;
-        row.appendChild(keyEl);
-        row.appendChild(document.createTextNode(': '));
+        line.appendChild(keyEl);
+
+        const vals = document.createElement('span');
+        vals.className = 'vals';
 
         const hasOld = oldData[k] !== undefined;
         const hasNew = newData[k] !== undefined;
@@ -215,27 +299,26 @@ function buildDiff(entry) {
             oldSpan.textContent = formatValue(oldData[k]);
             const arrow = document.createElement('span');
             arrow.className = 'arrow';
-            arrow.textContent = ' → ';
+            arrow.textContent = '\u2192';
             const newSpan = document.createElement('span');
             newSpan.className = 'new';
             newSpan.textContent = formatValue(newData[k]);
-            row.append(oldSpan, arrow, newSpan);
+            vals.append(oldSpan, arrow, newSpan);
         } else if (hasNew) {
             const newSpan = document.createElement('span');
             newSpan.className = 'new';
             newSpan.textContent = formatValue(newData[k]);
-            row.append(newSpan);
+            vals.appendChild(newSpan);
         } else {
             const oldSpan = document.createElement('span');
             oldSpan.className = 'old';
             oldSpan.textContent = formatValue(oldData[k]);
-            row.append(oldSpan);
+            vals.appendChild(oldSpan);
         }
 
-        wrapper.appendChild(row);
+        line.appendChild(vals);
+        return line;
     });
-
-    return wrapper;
 }
 
 function formatValue(v) {

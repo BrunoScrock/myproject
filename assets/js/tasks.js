@@ -1,5 +1,6 @@
 import { getSupabase } from './supabase.js';
 import { getCurrentUser } from './auth.js';
+import { escapeHtml, toast, confirmAction, copyToClipboard } from './ui.js';
 
 let tasks = [];
 let saveTimeout = null;
@@ -23,6 +24,7 @@ export async function loadTasks() {
 
     if (error) {
         console.error('Erro ao carregar tarefas:', error.message);
+        toast('Nao foi possivel carregar as tarefas do dia.', 'error');
         return [];
     }
 
@@ -52,10 +54,10 @@ export function renderTasks() {
         const num = index + 1;
         taskDiv.innerHTML = `
             <div class="task-number">${num}.</div>
-            <textarea id="task-input-${task.id || 'new-' + index}" 
-                      placeholder="Descreva a tarefa ${num}..." 
-                      oninput="autoGrow(this)" 
-                      data-task-index="${index}">${task.description || ''}</textarea>
+            <textarea id="task-input-${task.id || 'new-' + index}"
+                      placeholder="Descreva a tarefa ${num}..."
+                      oninput="autoGrow(this)"
+                      data-task-index="${index}">${escapeHtml(task.description || '')}</textarea>
             <button class="btn-copy btn-icon-only" onclick="window.TasksModule.copyTask(${index})" title="Copiar">
                 <span class="material-symbols-rounded">content_copy</span>
             </button>
@@ -100,8 +102,10 @@ export function addNewTaskField() {
     if (newField) newField.focus();
 }
 
-export function deleteTaskField(index) {
-    if (!confirm('Tem certeza que deseja excluir este campo de tarefa?')) return;
+export async function deleteTaskField(index) {
+    const ok = await confirmAction('Deseja excluir este campo de tarefa?', 'Excluir campo');
+    if (!ok) return;
+
     const deletedId = tasks[index]?.id;
     tasks.splice(index, 1);
     tasks.forEach((t, i) => t.position = i);
@@ -116,17 +120,19 @@ export function deleteTaskField(index) {
     debounceSave();
 }
 
-export function copyTask(index) {
+export async function copyTask(index) {
     const textarea = document.querySelector(`textarea[data-task-index="${index}"]`);
     if (!textarea || !textarea.value.trim()) {
-        alert('A tarefa está vazia!');
+        toast('A tarefa esta vazia.', 'warning');
         return;
     }
-    navigator.clipboard.writeText(textarea.value).then(() => {
-        const bg = textarea.style.backgroundColor;
-        textarea.style.backgroundColor = document.body.classList.contains('dark-mode') ? '#2e5c3a' : '#E8F5E9';
-        setTimeout(() => textarea.style.backgroundColor = bg, 500);
-    });
+    const ok = await copyToClipboard(textarea.value);
+    if (ok) {
+        textarea.style.backgroundColor = document.body.classList.contains('dark-mode') ? '#134E4A' : '#CCFBF1';
+        setTimeout(() => textarea.style.backgroundColor = '', 500);
+    } else {
+        toast('Nao foi possivel copiar a tarefa.', 'error');
+    }
 }
 
 export function clearTask(index) {
@@ -148,6 +154,7 @@ async function saveChangedTasks() {
     dirtyTasks.clear();
 
     const supabase = getSupabase();
+    let failed = 0;
 
     for (const task of pending) {
         if (!tasks.includes(task)) continue;
@@ -163,7 +170,9 @@ async function saveChangedTasks() {
                 .select()
                 .single();
             if (error) {
+                console.error('Erro ao salvar tarefa:', error.message);
                 dirtyTasks.add(task);
+                failed++;
             } else if (data) {
                 task.id = data.id;
             }
@@ -173,16 +182,23 @@ async function saveChangedTasks() {
                 .update({ description: task.description, position: task.position })
                 .eq('id', task.id);
             if (error) {
+                console.error('Erro ao atualizar tarefa:', error.message);
                 dirtyTasks.add(task);
+                failed++;
             }
         }
+    }
+
+    if (failed > 0) {
+        toast('Nao foi possivel gravar uma ou mais tarefas. Verifique sua conexao.', 'error', 5000);
     }
 }
 
 async function deleteTaskFromDB(id) {
     if (!id) return;
     const supabase = getSupabase();
-    await supabase.from('tasks').delete().eq('id', id);
+    const { error } = await supabase.from('tasks').delete().eq('id', id);
+    if (error) console.error('Erro ao excluir tarefa:', error.message);
 }
 
 window.TasksModule = { copyTask, clearTask, deleteTaskField };

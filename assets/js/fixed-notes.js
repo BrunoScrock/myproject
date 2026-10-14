@@ -1,5 +1,6 @@
 import { getSupabase } from './supabase.js';
 import { getCurrentUser } from './auth.js';
+import { escapeHtml, escapeAttr, toast, confirmAction, copyToClipboard } from './ui.js';
 
 let fixedNotes = [];
 
@@ -15,7 +16,8 @@ export async function loadFixedNotes() {
         .order('position', { ascending: true });
 
     if (error) {
-        console.error('Erro ao carregar anotações:', error.message);
+        console.error('Erro ao carregar anotacoes:', error.message);
+        toast('Nao foi possivel carregar as anotacoes.', 'error');
         return [];
     }
 
@@ -35,6 +37,17 @@ export function renderFixedNotes() {
     if (!listContainer) return;
     listContainer.innerHTML = '';
 
+    if (fixedNotes.length === 0) {
+        const empty = document.createElement('div');
+        empty.className = 'empty-state';
+        empty.innerHTML = `
+            <span class="material-symbols-rounded">sticky_note_2</span>
+            <p>Nenhuma anotacao fixa. Clique em <strong>Adicionar Anotacao</strong> para criar a primeira.</p>
+        `;
+        listContainer.appendChild(empty);
+        return;
+    }
+
     fixedNotes.forEach((note, index) => {
         const noteDiv = document.createElement('div');
         const noteColorClass = note.color ? `note-color-${note.color}` : 'note-color-default';
@@ -43,16 +56,15 @@ export function renderFixedNotes() {
         if (note.isEditing) {
             noteDiv.innerHTML = `
                 <div class="inline-edit-form">
-                    <input type="text" id="edit-fixed-title-${note.id}" value="${note.title || ''}" 
-                           placeholder="Título da anotação (opcional)..." style="font-size: 14px; padding: 10px;">
-                    <textarea id="edit-fixed-text-${note.id}" class="fixed-note-edit-textarea" 
-                              placeholder="Digite a sua anotação..." 
-                              style="font-size: 15px; padding: 10px;">${note.content || ''}</textarea>
-                    <div class="fixed-note-form-actions" style="margin-top: 5px;">
-                        <button class="btn-save" onclick="window.FixedNotesModule.saveFixedNoteEdit('${note.id}')" style="margin: 0; flex: 1; padding: 10px;">
+                    <input type="text" id="edit-fixed-title-${note.id}" value="${escapeAttr(note.title || '')}"
+                           placeholder="Titulo da anotacao (opcional)…">
+                    <textarea id="edit-fixed-text-${note.id}" class="fixed-note-edit-textarea"
+                              placeholder="Digite a sua anotacao…">${escapeHtml(note.content || '')}</textarea>
+                    <div class="fixed-note-form-actions">
+                        <button class="btn-save" onclick="window.FixedNotesModule.saveFixedNoteEdit('${note.id}')">
                             <span class="material-symbols-rounded">save</span> Salvar
                         </button>
-                        <button class="btn-delete" onclick="window.FixedNotesModule.toggleFixedNoteEdit('${note.id}', false)" style="margin: 0; flex: 1; padding: 10px;">
+                        <button class="btn-delete btn-block" onclick="window.FixedNotesModule.toggleFixedNoteEdit('${note.id}', false)">
                             <span class="material-symbols-rounded">close</span> Cancelar
                         </button>
                     </div>
@@ -61,7 +73,9 @@ export function renderFixedNotes() {
         } else {
             const isFirst = index === 0;
             const isLast = index === fixedNotes.length - 1;
-            const titleHTML = note.title ? `<div class="fixed-note-title-display">${note.title}</div>` : '';
+            const titleHTML = note.title
+                ? `<div class="fixed-note-title-display">${escapeHtml(note.title)}</div>`
+                : '';
 
             noteDiv.innerHTML = `
                 <div class="fixed-note-content-area" role="button" tabindex="0"
@@ -69,25 +83,25 @@ export function renderFixedNotes() {
                      onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();window.FixedNotesModule.openFixedNoteModal('${note.id}');}"
                      title="Clique para expandir">
                     ${titleHTML}
-                    <span class="fixed-note-text">${note.content || ''}</span>
+                    <span class="fixed-note-text">${escapeHtml(note.content || '')}</span>
                 </div>
                 <div class="fixed-note-actions">
-                    <button class="btn-move btn-icon-only" onclick="window.FixedNotesModule.moveFixedNote(${index}, -1)" title="Mover para Cima" ${isFirst ? 'disabled style="opacity:0.3; cursor:not-allowed;"' : ''}>
+                    <button class="btn-move" onclick="window.FixedNotesModule.moveFixedNote(${index}, -1)" title="Mover para Cima" ${isFirst ? 'disabled' : ''}>
                         <span class="material-symbols-rounded">arrow_upward</span>
                     </button>
-                    <button class="btn-color-palette btn-icon-only" onclick="window.FixedNotesModule.changeFixedNoteColor('${note.id}')" title="Alterar Cor de Fundo">
+                    <button class="btn-color-palette" onclick="window.FixedNotesModule.changeFixedNoteColor('${note.id}')" title="Alterar Cor de Fundo">
                         <span class="material-symbols-rounded">palette</span>
                     </button>
-                    <button class="btn-edit btn-icon-only" onclick="window.FixedNotesModule.toggleFixedNoteEdit('${note.id}', true)" title="Editar">
+                    <button class="btn-edit" onclick="window.FixedNotesModule.toggleFixedNoteEdit('${note.id}', true)" title="Editar">
                         <span class="material-symbols-rounded">edit</span>
                     </button>
-                    <button class="btn-move btn-icon-only" onclick="window.FixedNotesModule.moveFixedNote(${index}, 1)" title="Mover para Baixo" ${isLast ? 'disabled style="opacity:0.3; cursor:not-allowed;"' : ''}>
+                    <button class="btn-move" onclick="window.FixedNotesModule.moveFixedNote(${index}, 1)" title="Mover para Baixo" ${isLast ? 'disabled' : ''}>
                         <span class="material-symbols-rounded">arrow_downward</span>
                     </button>
                     <button class="btn-copy btn-icon-only" onclick="window.FixedNotesModule.copyFixedNote(this)" title="Copiar Texto">
                         <span class="material-symbols-rounded">content_copy</span>
                     </button>
-                    <button class="btn-delete btn-icon-only" onclick="window.FixedNotesModule.removeFixedNote('${note.id}')" title="Excluir">
+                    <button class="btn-delete" onclick="window.FixedNotesModule.removeFixedNote('${note.id}')" title="Excluir">
                         <span class="material-symbols-rounded">delete</span>
                     </button>
                 </div>
@@ -98,18 +112,25 @@ export function renderFixedNotes() {
 }
 
 export function showFixedNoteForm() {
-    document.getElementById('btn-show-fixed-form').style.display = 'none';
-    document.getElementById('fixed-note-form').style.display = 'flex';
-    document.getElementById('new-fixed-note-title').focus();
+    const btn = document.getElementById('btn-show-fixed-form');
+    const form = document.getElementById('fixed-note-form');
+    if (btn) btn.style.display = 'none';
+    if (form) form.style.display = 'flex';
+    document.getElementById('new-fixed-note-title')?.focus();
 }
 
 export function hideFixedNoteForm() {
-    document.getElementById('fixed-note-form').style.display = 'none';
-    document.getElementById('btn-show-fixed-form').style.display = 'flex';
-    document.getElementById('new-fixed-note-title').value = '';
-    document.getElementById('new-fixed-note-text').value = '';
-    const textarea = document.getElementById('new-fixed-note-text');
-    if (typeof autoGrow === 'function') autoGrow(textarea);
+    const btn = document.getElementById('btn-show-fixed-form');
+    const form = document.getElementById('fixed-note-form');
+    if (form) form.style.display = 'none';
+    if (btn) btn.style.display = 'inline-flex';
+    const titleEl = document.getElementById('new-fixed-note-title');
+    const textEl = document.getElementById('new-fixed-note-text');
+    if (titleEl) titleEl.value = '';
+    if (textEl) {
+        textEl.value = '';
+        if (typeof autoGrow === 'function') autoGrow(textEl);
+    }
 }
 
 export async function saveFixedNote() {
@@ -119,7 +140,8 @@ export async function saveFixedNote() {
     const noteTitle = document.getElementById('new-fixed-note-title').value.trim();
     const noteText = document.getElementById('new-fixed-note-text').value.trim();
     if (!noteText) {
-        alert('Por favor, digite pelo menos o texto da anotação antes de salvar.');
+        toast('Digite pelo menos o texto da anotacao antes de salvar.', 'warning');
+        document.getElementById('new-fixed-note-text')?.focus();
         return;
     }
 
@@ -141,14 +163,15 @@ export async function saveFixedNote() {
         .single();
 
     if (error) {
-        console.error('Erro ao salvar anotação:', error.message);
-        alert('Erro ao salvar. Tente novamente.');
+        console.error('Erro ao salvar anotacao:', error.message);
+        toast('Erro ao salvar a anotacao. Tente novamente.', 'error');
         return;
     }
 
     fixedNotes.push({ ...data, isEditing: false });
     renderFixedNotes();
     hideFixedNoteForm();
+    toast('Anotacao salva.', 'success');
 }
 
 export function toggleFixedNoteEdit(id, isEditing) {
@@ -165,7 +188,7 @@ export async function saveFixedNoteEdit(id) {
     const noteText = textEl.value.trim();
 
     if (!noteText) {
-        alert('O texto da anotação não pode ficar vazio.');
+        toast('O texto da anotacao nao pode ficar vazio.', 'warning');
         return;
     }
 
@@ -177,12 +200,19 @@ export async function saveFixedNoteEdit(id) {
     note.isEditing = false;
 
     const supabase = getSupabase();
-    await supabase
+    const { error } = await supabase
         .from('fixed_notes')
         .update({ title: noteTitle, content: noteText })
         .eq('id', id);
 
+    if (error) {
+        console.error('Erro ao atualizar anotacao:', error.message);
+        toast('Erro ao salvar a anotacao.', 'error');
+        return;
+    }
+
     renderFixedNotes();
+    toast('Anotacao atualizada.', 'success');
 }
 
 const CORES = ['default', 'yellow', 'blue', 'green', 'pink'];
@@ -196,11 +226,14 @@ export async function changeFixedNoteColor(id) {
     note.color = CORES[proximoIndice];
 
     const supabase = getSupabase();
-    await supabase
+    const { error } = await supabase
         .from('fixed_notes')
         .update({ color: note.color })
         .eq('id', id);
 
+    if (error) {
+        console.error('Erro ao alterar cor da anotacao:', error.message);
+    }
     renderFixedNotes();
 }
 
@@ -217,36 +250,50 @@ export async function moveFixedNote(index, direction) {
     const supabase = getSupabase();
     for (const note of fixedNotes) {
         if (note.id) {
-            await supabase
+            const { error } = await supabase
                 .from('fixed_notes')
                 .update({ position: note.position })
                 .eq('id', note.id);
+            if (error) {
+                console.error('Erro ao reordenar anotacoes:', error.message);
+                toast('Nao foi possivel salvar a nova ordem.', 'error');
+                break;
+            }
         }
     }
 
     renderFixedNotes();
 }
 
-export function copyFixedNote(buttonElement) {
+export async function copyFixedNote(buttonElement) {
     const noteDiv = buttonElement.closest('.fixed-note-item');
     const textElement = noteDiv.querySelector('.fixed-note-text');
     const textToCopy = textElement.innerText;
 
-    navigator.clipboard.writeText(textToCopy).then(() => {
-        const bg = noteDiv.style.backgroundColor;
-        noteDiv.style.backgroundColor = document.body.classList.contains('dark-mode') ? '#2e5c3a' : '#E8F5E9';
-        setTimeout(() => noteDiv.style.backgroundColor = bg, 500);
-    });
+    const ok = await copyToClipboard(textToCopy);
+    if (ok) {
+        noteDiv.style.backgroundColor = document.body.classList.contains('dark-mode') ? '#134E4A' : '#CCFBF1';
+        setTimeout(() => noteDiv.style.backgroundColor = '', 500);
+    } else {
+        toast('Nao foi possivel copiar a anotacao.', 'error');
+    }
 }
 
 export async function removeFixedNote(id) {
-    if (!confirm('Tem a certeza que deseja excluir esta anotação?')) return;
+    const ok = await confirmAction('Deseja excluir esta anotacao?', 'Excluir anotacao');
+    if (!ok) return;
 
     fixedNotes = fixedNotes.filter(n => n.id !== id);
     renderFixedNotes();
 
     const supabase = getSupabase();
-    await supabase.from('fixed_notes').delete().eq('id', id);
+    const { error } = await supabase.from('fixed_notes').delete().eq('id', id);
+    if (error) {
+        console.error('Erro ao excluir anotacao:', error.message);
+        toast('Nao foi possivel excluir a anotacao.', 'error');
+        return;
+    }
+    toast('Anotacao excluida.', 'success');
 }
 
 export function openFixedNoteModal(id) {

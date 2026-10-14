@@ -1,12 +1,15 @@
 import { initAuth, setAuthCallback, signInWithGoogle, signOut, getCurrentUser as getAuthUser } from './auth.js';
-import { loadTasks, renderTasks, addNewTaskField } from './tasks.js';
-import { loadScheduledTasks, renderScheduledTasks, addScheduledTask } from './scheduled-tasks.js';
-import { loadFixedNotes, renderFixedNotes, showFixedNoteForm, hideFixedNoteForm, saveFixedNote } from './fixed-notes.js';
+import { loadTasks, renderTasks, addNewTaskField, getTasks } from './tasks.js';
+import { loadScheduledTasks, renderScheduledTasks, addScheduledTask, getScheduledTasks } from './scheduled-tasks.js';
+import { loadFixedNotes, renderFixedNotes, showFixedNoteForm, hideFixedNoteForm, saveFixedNote, getFixedNotes } from './fixed-notes.js';
 import { mudarCategoriaEprotocolo, formatarNome, gerarEprotocolo, limparEprotocolo, copiarEprotocolo } from './eprotocolo.js';
 import { normalParaDecimal, decimalParaNormal } from './hours.js';
 import { loadAuditLog, renderAuditEntries, resetAuditFilters } from './audit.js';
 import { checkMigrationNeeded, showMigrationModal } from './migration.js';
 import { initTermoRecebimento, updatePreview } from './termo-recebimento.js';
+import { toast, confirmAction, copyToClipboard } from './ui.js';
+
+const SIDEBAR_KEY = 'appSidebarCollapsed';
 
 function showScreen(screenId) {
     ['login-screen', 'loading-screen', 'app-screen'].forEach(id => {
@@ -51,16 +54,33 @@ async function initApp(user) {
         }
     } catch (err) {
         console.error('Erro ao inicializar app:', err);
-        alert('Erro ao carregar dados. Verifique sua conexão e tente novamente.');
+        toast('Erro ao carregar dados. Verifique sua conexao e tente novamente.', 'error', 6000);
         showScreen('login-screen');
+    }
+}
+
+function applySidebarState(collapsed) {
+    document.body.classList.toggle('sidebar-collapsed', collapsed);
+    localStorage.setItem(SIDEBAR_KEY, collapsed ? 'true' : 'false');
+    const icon = document.querySelector('#btn-sidebar-toggle .material-symbols-rounded');
+    if (icon) icon.textContent = collapsed ? 'menu' : 'menu_open';
+    const btn = document.getElementById('btn-sidebar-toggle');
+    if (btn) {
+        btn.title = collapsed ? 'Expandir menu' : 'Recolher menu';
+        btn.setAttribute('aria-label', btn.title);
     }
 }
 
 function setupEventListeners() {
     document.getElementById('btn-google-login')?.addEventListener('click', () => {
         signInWithGoogle().catch(err => {
-            alert('Erro ao conectar com o servidor de autenticação.');
+            console.error('Falha no login:', err);
+            toast('Erro ao conectar ao servidor de autenticacao.', 'error', 5000);
         });
+    });
+
+    document.getElementById('btn-sidebar-toggle')?.addEventListener('click', () => {
+        applySidebarState(!document.body.classList.contains('sidebar-collapsed'));
     });
 
     const scrollTopBtn = document.getElementById('btn-scroll-top');
@@ -75,9 +95,8 @@ function setupEventListeners() {
     }
 
     document.getElementById('btn-logout')?.addEventListener('click', async () => {
-        if (confirm('Tem certeza que deseja sair?')) {
-            await signOut();
-        }
+        const ok = await confirmAction('Deseja realmente sair da sua conta?', 'Sair da conta', 'Sair');
+        if (ok) await signOut();
     });
 
     document.getElementById('theme-toggle')?.addEventListener('click', toggleTheme);
@@ -92,7 +111,9 @@ function setupEventListeners() {
         clearTimeout(window.__auditSearchDebounce);
         window.__auditSearchDebounce = setTimeout(renderAuditEntries, 250);
     });
-    document.getElementById('btn-audit-refresh')?.addEventListener('click', loadAuditLog);
+    document.getElementById('btn-audit-refresh')?.addEventListener('click', () => {
+        loadAuditLog().then(() => toast('Auditoria atualizada.', 'success'));
+    });
     document.getElementById('btn-audit-clear')?.addEventListener('click', resetAuditFilters);
 
     document.getElementById('add-task-btn')?.addEventListener('click', addNewTaskField);
@@ -130,7 +151,16 @@ function openTab(tabId, btnElement) {
     document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
     document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
     document.getElementById(tabId)?.classList.add('active');
-    btnElement?.classList.add('active');
+
+    // Se a aba foi aberta por atalho externo (ex: botao Auditoria no topo),
+    // sincroniza o item correspondente da sidebar.
+    const activeBtn = btnElement || document.querySelector(`.tab-btn[data-tab="${tabId}"]`);
+    activeBtn?.classList.add('active');
+
+    const titleEl = document.getElementById('page-title');
+    if (titleEl && activeBtn?.dataset.title) {
+        titleEl.textContent = activeBtn.dataset.title;
+    }
 
     if (tabId === 'tab-auditoria') {
         loadAuditLog();
@@ -164,7 +194,8 @@ function loadTheme() {
 function aplicarRemocao() {
     const input = document.getElementById('remover-input').value;
     if (!input.trim()) {
-        alert('Insira algum texto para remover os caracteres.');
+        toast('Insira algum texto para remover os caracteres.', 'warning');
+        document.getElementById('remover-input').focus();
         return;
     }
     const cleanText = input.replace(/[^\w\sÀ-ÿ]/gi, '');
@@ -172,19 +203,11 @@ function aplicarRemocao() {
     document.getElementById('remover-output-box').style.display = 'flex';
 }
 
-function copiarRemocao() {
+async function copiarRemocao() {
     const texto = document.getElementById('remover-output-text').innerText;
-    navigator.clipboard.writeText(texto).then(() => {
-        const copyBtn = document.querySelector('#remover-output-box .btn-copy');
-        const originalBg = copyBtn.style.backgroundColor;
-        const originalHtml = copyBtn.innerHTML;
-        copyBtn.style.backgroundColor = document.body.classList.contains('dark-mode') ? '#2e5c3a' : '#2ECC71';
-        copyBtn.innerHTML = '<span class="material-symbols-rounded">check</span> Copiado!';
-        setTimeout(() => {
-            copyBtn.style.backgroundColor = originalBg;
-            copyBtn.innerHTML = originalHtml;
-        }, 1500);
-    });
+    const ok = await copyToClipboard(texto);
+    if (ok) toast('Texto copiado.', 'success');
+    else toast('Nao foi possivel copiar. Copie manualmente.', 'error');
 }
 
 function limparRemocao() {
@@ -203,7 +226,7 @@ function atualizarConversaoHoras() {
     if (normalInput) {
         const resultado = normalParaDecimal(normalInput);
         if (resultado === null) {
-            normalResultEl.textContent = 'Formato inválido';
+            normalResultEl.textContent = 'Formato invalido';
             normalResultEl.classList.add('invalid');
         } else {
             normalResultEl.textContent = resultado;
@@ -217,7 +240,7 @@ function atualizarConversaoHoras() {
     if (decimalInput) {
         const resultado = decimalParaNormal(decimalInput);
         if (resultado === null) {
-            decimalResultEl.textContent = 'Formato inválido';
+            decimalResultEl.textContent = 'Formato invalido';
             decimalResultEl.classList.add('invalid');
         } else {
             decimalResultEl.textContent = resultado;
@@ -229,22 +252,16 @@ function atualizarConversaoHoras() {
     }
 }
 
-function copiarResultadoHoras(resultId) {
+async function copiarResultadoHoras(resultId) {
     const resultEl = document.getElementById(resultId);
     const texto = resultEl.innerText;
-    if (!texto || texto === '—' || texto === 'Formato inválido') return;
-
-    navigator.clipboard.writeText(texto).then(() => {
-        const copyBtn = resultEl.closest('.hours-card').querySelector('.btn-copy');
-        const originalHtml = copyBtn.innerHTML;
-        const originalColor = copyBtn.style.backgroundColor;
-        copyBtn.innerHTML = '<span class="material-symbols-rounded">check</span> Copiado!';
-        copyBtn.style.backgroundColor = 'var(--success-color)';
-        setTimeout(() => {
-            copyBtn.innerHTML = originalHtml;
-            copyBtn.style.backgroundColor = originalColor;
-        }, 1500);
-    });
+    if (!texto || texto === '—' || texto === 'Formato invalido') {
+        toast('Nada para copiar ainda.', 'warning');
+        return;
+    }
+    const ok = await copyToClipboard(texto);
+    if (ok) toast('Resultado copiado.', 'success');
+    else toast('Nao foi possivel copiar.', 'error');
 }
 
 function limparConversao(inputId, resultId) {
@@ -261,6 +278,10 @@ window.autoGrow = function (element) {
 
 window.addEventListener('DOMContentLoaded', () => {
     loadTheme();
+
+    const collapsed = localStorage.getItem(SIDEBAR_KEY) === 'true';
+    applySidebarState(collapsed);
+
     showScreen('loading-screen');
 
     setAuthCallback((user, status) => {
@@ -268,7 +289,7 @@ window.addEventListener('DOMContentLoaded', () => {
             initApp(user);
         } else if (status === 'unauthorized') {
             showScreen('login-screen');
-            alert('Esta conta Google não está autorizada a acessar o sistema.');
+            toast('Esta conta Google nao esta autorizada a acessar o sistema.', 'error', 6000);
         } else if (status === 'signed_out') {
             showScreen('login-screen');
         }
@@ -277,23 +298,28 @@ window.addEventListener('DOMContentLoaded', () => {
     try {
         initAuth();
     } catch (err) {
-        console.error('Erro ao iniciar autenticação:', err);
+        console.error('Erro ao iniciar autenticacao:', err);
         showScreen('login-screen');
-        alert('Não foi possível conectar ao servidor de autenticação.');
+        toast('Nao foi possivel conectar ao servidor de autenticacao.', 'error', 6000);
     }
 
     setupEventListeners();
     initTermoRecebimento();
 
+    // Se a sessao nao resolver em 12s, volta ao login com mensagem clara
     setTimeout(() => {
-        if (document.getElementById('app-screen').style.display !== 'flex') {
+        const appScreen = document.getElementById('app-screen');
+        if (appScreen && appScreen.style.display !== 'flex') {
             showScreen('login-screen');
+            toast('A sessao expirou ou nao foi concluida. Entre novamente.', 'warning', 6000);
         }
-    }, 5000);
+    }, 12000);
 
+    // Atualiza tarefas agendadas periodicamente, apenas com a aba visivel
     setInterval(() => {
-        if (getAuthUser()) {
-            renderScheduledTasks();
-        }
+        if (document.hidden) return;
+        if (!getAuthUser()) return;
+        if (!document.getElementById('tab-tarefas')?.classList.contains('active')) return;
+        renderScheduledTasks();
     }, 60000);
 });

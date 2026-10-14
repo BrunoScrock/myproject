@@ -3,6 +3,7 @@ import { getCurrentUser } from './auth.js';
 import { getTasks, loadTasks, renderTasks } from './tasks.js';
 import { getScheduledTasks, loadScheduledTasks, renderScheduledTasks } from './scheduled-tasks.js';
 import { getFixedNotes, loadFixedNotes, renderFixedNotes } from './fixed-notes.js';
+import { toast } from './ui.js';
 
 const MIGRATION_KEY = 'supabase_migration_completed';
 
@@ -19,12 +20,18 @@ export function checkMigrationNeeded() {
 
 export function showMigrationModal() {
     const modal = document.getElementById('migration-modal');
-    if (modal) modal.style.display = 'flex';
+    if (modal) {
+        modal.style.display = 'flex';
+        modal.classList.add('visible');
+    }
 }
 
 function hideMigrationModal() {
     const modal = document.getElementById('migration-modal');
-    if (modal) modal.style.display = 'none';
+    if (modal) {
+        modal.style.display = 'none';
+        modal.classList.remove('visible');
+    }
 }
 
 export async function migrateLocalData() {
@@ -82,13 +89,13 @@ export async function migrateLocalData() {
             renderTasks();
             renderScheduledTasks();
             renderFixedNotes();
-            alert(`${importedCount} item(ns) importado(s) com sucesso!`);
+            toast(`${importedCount} item(ns) importado(s) com sucesso!`, 'success', 5000);
         } else {
-            alert('Nenhum dado encontrado para importar.');
+            toast('Nenhum dado encontrado para importar.', 'info');
         }
     } catch (err) {
-        console.error('Erro na migração:', err);
-        alert('Ocorreu um erro durante a importação. Tente novamente.');
+        console.error('Erro na migracao:', err);
+        toast('Ocorreu um erro durante a importacao. Tente novamente.', 'error', 5000);
     }
 }
 
