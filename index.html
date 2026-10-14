@@ -11,16 +11,27 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,500,0,0">
-
-  <script type="module" crossorigin src="./assets/index-BzRIzrOV.js"></script>
-  <link rel="stylesheet" crossorigin href="./assets/index-DJMwn-zL.css">
+
+  <script type="module" crossorigin src="./assets/index-CSU_RpPd.js"></script>
+  <link rel="stylesheet" crossorigin href="./assets/index-CClEWN_o.css">
 </head>
 <body>
+
+    <!-- AVISO DE JANELA ESTREITA -->
+    <div id="desktop-warning" class="desktop-warning" role="alert">
+        <span class="material-symbols-rounded">desktop_windows</span>
+        <div>
+            <strong>Experiência otimizada para desktop</strong>
+            <p>Este sistema foi desenhado para telas de 1280&nbsp;px ou mais. Redimensione a janela para aproveitar todos os recursos.</p>
+        </div>
+    </div>
 
     <!-- TELA DE LOGIN -->
     <div id="login-screen" class="screen">
         <div class="login-card">
-            <span class="material-symbols-rounded login-icon">lock_open</span>
+            <div class="login-mark">
+                <span class="material-symbols-rounded login-icon">lock_open</span>
+            </div>
             <h1>Sistema de Anotações</h1>
             <div class="login-subtitle">Bruno Scrock</div>
             <p>Organize suas tarefas, anotações, despachos e horas de trabalho de forma simples e segura.</p>
@@ -40,523 +51,687 @@
     <div id="loading-screen" class="screen">
         <div class="loading-container">
             <div class="loading-spinner"></div>
-            <div class="loading-text">Carregando...</div>
+            <div class="loading-text">Carregando…</div>
         </div>
     </div>
 
     <!-- TELA PRINCIPAL -->
     <div id="app-screen" class="screen app-screen">
 
-        <!-- CABECALHO -->
-        <header class="app-header">
-            <div class="header-inner">
-                <div class="brand">
-                    <img class="brand-icon" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NCA2NCI+DQogIDxkZWZzPg0KICAgIDxsaW5lYXJHcmFkaWVudCBpZD0iZ3JhZCIgeDE9IjAiIHkxPSIwIiB4Mj0iMSIgeTI9IjEiPg0KICAgICAgPHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzI1NjNFQiIvPg0KICAgICAgPHN0b3Agb2Zmc2V0PSIxMDAlIiBzdG9wLWNvbG9yPSIjNEY0NkU1Ii8+DQogICAgPC9saW5lYXJHcmFkaWVudD4NCiAgPC9kZWZzPg0KICA8cmVjdCB3aWR0aD0iNjQiIGhlaWdodD0iNjQiIHJ4PSIxNiIgZmlsbD0idXJsKCNncmFkKSIvPg0KICA8dGV4dCB4PSIzMiIgeT0iNDMiIGZvbnQtZmFtaWx5PSJJbnRlciwgJ1NlZ29lIFVJJywgSGVsdmV0aWNhLCBBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIyOCIgZm9udC13ZWlnaHQ9IjcwMCIgZmlsbD0iI0ZGRkZGRiIgdGV4dC1hbmNob3I9Im1pZGRsZSI+QlM8L3RleHQ+DQo8L3N2Zz4=" alt="Logo BS">
+        <div class="app-shell">
+
+            <!-- ============ SIDEBAR ============ -->
+            <aside class="sidebar" id="sidebar">
+                <div class="sidebar-brand">
+                    <span class="sidebar-logo">
+                        <img class="brand-icon" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NCA2NCI+DQogIDxkZWZzPg0KICAgIDxsaW5lYXJHcmFkaWVudCBpZD0iZ3JhZCIgeDE9IjAiIHkxPSIwIiB4Mj0iMSIgeTI9IjEiPg0KICAgICAgPHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzI1NjNFQiIvPg0KICAgICAgPHN0b3Agb2Zmc2V0PSIxMDAlIiBzdG9wLWNvbG9yPSIjNEY0NkU1Ii8+DQogICAgPC9saW5lYXJHcmFkaWVudD4NCiAgPC9kZWZzPg0KICA8cmVjdCB3aWR0aD0iNjQiIGhlaWdodD0iNjQiIHJ4PSIxNiIgZmlsbD0idXJsKCNncmFkKSIvPg0KICA8dGV4dCB4PSIzMiIgeT0iNDMiIGZvbnQtZmFtaWx5PSJJbnRlciwgJ1NlZ29lIFVJJywgSGVsdmV0aWNhLCBBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIyOCIgZm9udC13ZWlnaHQ9IjcwMCIgZmlsbD0iI0ZGRkZGRiIgdGV4dC1hbmNob3I9Im1pZGRsZSI+QlM8L3RleHQ+DQo8L3N2Zz4=" alt="Logo BS">
+                    </span>
                     <div class="brand-text">
                         <span class="brand-title">Sistema de Anotações</span>
                         <span class="brand-subtitle">Bruno Scrock</span>
                     </div>
                 </div>
 
-                <div class="header-actions">
-                    <button id="btn-open-auditoria" class="btn-auditoria" title="Histórico de Auditoria">
-                        <span class="material-symbols-rounded">history_edu</span>
-                        <span class="btn-auditoria-label">Auditoria</span>
-                    </button>
+                <nav class="main-nav" aria-label="Navegação principal">
+                    <div class="nav-inner">
 
-                    <div class="notification-area" id="bell-area">
-                        <span class="material-symbols-rounded">notifications</span>
-                        <span class="badge" id="notification-badge">0</span>
-                        <div class="notification-dropdown">
-                            <div class="dropdown-header">Notificações</div>
-                            <div id="dropdown-content"></div>
-                        </div>
-                    </div>
-
-                    <button id="theme-toggle" class="btn-theme" title="Alternar tema">
-                        <span class="material-symbols-rounded" id="theme-icon">dark_mode</span>
-                    </button>
-
-                    <div class="header-user">
-                        <img id="user-avatar" class="user-avatar" src="" alt="Avatar">
-                        <span id="user-name" class="user-name"></span>
-                        <button id="btn-logout" class="btn-logout" title="Sair da conta">
-                            <span class="material-symbols-rounded">logout</span>
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </header>
-
-        <!-- NAVEGACAO (ABAS) -->
-        <nav class="main-nav" aria-label="Navegação principal">
-            <div class="nav-inner">
-                <button class="tab-btn active" data-tab="tab-tarefas">
-                    <span class="material-symbols-rounded">checklist</span> Tarefas & Anotações
-                </button>
-                <button class="tab-btn" data-tab="tab-eprotocolo">
-                    <span class="material-symbols-rounded">gavel</span> E-Protocolo
-                </button>
-                <button class="tab-btn" data-tab="tab-horas">
-                    <span class="material-symbols-rounded">schedule</span> Conversor de Horas
-                </button>
-                <button class="tab-btn" data-tab="tab-termo">
-                    <span class="material-symbols-rounded">description</span> Termo de Recebimento
-                </button>
-            </div>
-        </nav>
-
-        <!-- CONTEUDO PRINCIPAL -->
-        <main class="main-content">
-
-            <!-- TAB: TAREFAS & ANOTACOES -->
-            <div id="tab-tarefas" class="tab-content active">
-                <div class="content-card">
-                    <h1>Tarefas do Dia</h1>
-                    <div class="task-list" id="task-list"></div>
-                    <button id="add-task-btn" class="btn-add-task">
-                        <span class="material-symbols-rounded">add</span> Adicionar Nova Tarefa
-                    </button>
-                    <button id="add-scheduled-btn" class="btn-add-scheduled">
-                        <span class="material-symbols-rounded">calendar_month</span> Adicionar Tarefa Agendada
-                    </button>
-                    <div class="scheduled-list" id="scheduled-list"></div>
-
-                    <hr>
-
-                    <h2>Anotações Fixas</h2>
-                    <div class="fixed-notes-container">
-                        <button class="btn-add" id="btn-show-fixed-form">
-                            <span class="material-symbols-rounded">add</span> Adicionar Anotação
-                        </button>
-                        <div class="fixed-note-form" id="fixed-note-form">
-                            <input type="text" id="new-fixed-note-title" placeholder="Título da anotação (opcional)..." style="font-size: 14px;">
-                            <textarea id="new-fixed-note-text" placeholder="Digite a sua anotação..." rows="2" oninput="autoGrow(this)"></textarea>
-                            <div class="fixed-note-form-actions">
-                                <button id="btn-save-fixed-note" class="btn-save">
-                                    <span class="material-symbols-rounded">save</span> Salvar
-                                </button>
-                                <button id="btn-cancel-fixed-note" class="btn-delete" style="width: 100%; padding: 14px;">
-                                    <span class="material-symbols-rounded">close</span> Cancelar
-                                </button>
-                            </div>
-                        </div>
-                        <div class="fixed-notes-list" id="fixed-notes-list"></div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- TAB: E-PROTOCOLO -->
-            <div id="tab-eprotocolo" class="tab-content">
-                <div class="content-card">
-                    <h1>Gerador de Despachos</h1>
-
-                    <div class="epro-field epro-field-full epro-category-selector">
-                        <label for="epro-categoria">Categoria do Despacho</label>
-                        <select id="epro-categoria">
-                            <option value="liberacao" selected>Liberação de sistema</option>
-                            <option value="ausencia">Ausência de informação do perfil</option>
-                        </select>
-                    </div>
-
-                    <!-- Form: Liberacao -->
-                    <div id="form-liberacao" class="epro-grid">
-                        <div class="epro-field">
-                            <label for="epro-mov">Número do MOV</label>
-                            <input type="text" id="epro-mov" placeholder="Ex: 12.3">
+                        <div class="nav-group">
+                            <span class="nav-group-label">Operação</span>
+                            <button class="tab-btn active" data-tab="tab-tarefas" data-title="Tarefas &amp; Anotações" data-icon="checklist">
+                                <span class="material-symbols-rounded">checklist</span>
+                                <span class="tab-label">Tarefas &amp; Anotações</span>
+                            </button>
+                            <button class="tab-btn" data-tab="tab-eprotocolo" data-title="Gerador de Despachos" data-icon="gavel">
+                                <span class="material-symbols-rounded">gavel</span>
+                                <span class="tab-label">Gerador de Despachos</span>
+                            </button>
                         </div>
 
-                        <div class="epro-field">
-                            <label for="epro-cargo">Cargo</label>
-                            <select id="epro-cargo">
-                                <option value="" disabled selected>Selecione um cargo...</option>
-                                <option value="Estagiário(a)">Estagiário(a)</option>
-                                <option value="Servidor(a)">Servidor(a)</option>
-                                <option value="Terceirizado(a)">Terceirizado(a)</option>
-                                <option value="Procurador(a)">Procurador(a)</option>
-                            </select>
+                        <div class="nav-group">
+                            <span class="nav-group-label">Documentos</span>
+                            <button class="tab-btn" data-tab="tab-termo" data-title="Termo de Recebimento" data-icon="description">
+                                <span class="material-symbols-rounded">description</span>
+                                <span class="tab-label">Termo de Recebimento</span>
+                            </button>
                         </div>
 
-                        <div class="epro-field epro-field-full">
-                            <label>Sistemas a Liberar</label>
-                            <div class="checkbox-group" id="epro-sistemas-group">
-                                <label class="checkbox-item"><input type="checkbox" value="E-Protocolo"> E-Protocolo</label>
-                                <label class="checkbox-item"><input type="checkbox" value="SIPRO"> SIPRO</label>
-                                <label class="checkbox-item"><input type="checkbox" value="PROAJU"> PROAJU</label>
-                                <label class="checkbox-item"><input type="checkbox" value="INDSEC"> INDSEC</label>
-                                <label class="checkbox-item"><input type="checkbox" value="SFEPGE"> SFEPGE</label>
-                                <label class="checkbox-item"><input type="checkbox" value="DATAPGE - Agenda de Prazos"> DATAPGE - Agenda de Prazos</label>
-                            </div>
-                            <input type="text" id="epro-sistema-extra" placeholder="Outro sistema ou informação adicional (opcional)..." style="margin-top: 8px;">
-                        </div>
-
-                        <div class="epro-field epro-field-full">
-                            <label for="epro-nome">Nome do Interessado</label>
-                            <div class="input-with-button">
-                                <input type="text" id="epro-nome" placeholder="Digite o nome completo">
-                                <button id="btn-format-name" class="btn-edit btn-icon-only" title="Ajustar Maiúsculas/Minúsculas">
-                                    <span class="material-symbols-rounded">text_format</span>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Form: Ausencia -->
-                    <div id="form-ausencia" class="epro-grid" style="display: none;">
-                        <div class="epro-field">
-                            <label for="epro-cargo-ausencia">Cargo</label>
-                            <select id="epro-cargo-ausencia">
-                                <option value="" disabled selected>Selecione um cargo...</option>
-                                <option value="Estagiário(a)">Estagiário(a)</option>
-                                <option value="Servidor(a)">Servidor(a)</option>
-                                <option value="Terceirizado(a)">Terceirizado(a)</option>
-                                <option value="Procurador(a)">Procurador(a)</option>
-                            </select>
-                        </div>
-
-                        <div class="epro-field">
-                            <label for="epro-nome-ausencia">Nome do Interessado</label>
-                            <div class="input-with-button">
-                                <input type="text" id="epro-nome-ausencia" placeholder="Digite o nome completo">
-                                <button id="btn-format-name-ausencia" class="btn-edit btn-icon-only" title="Ajustar Maiúsculas/Minúsculas">
-                                    <span class="material-symbols-rounded">text_format</span>
-                                </button>
-                            </div>
-                        </div>
-
-                        <div class="epro-field epro-field-full">
-                            <label>Sistemas Pendentes</label>
-                            <div class="checkbox-group" id="epro-sistemas-group-ausencia">
-                                <label class="checkbox-item"><input type="checkbox" value="SIPRO"> SIPRO</label>
-                                <label class="checkbox-item"><input type="checkbox" value="DATAPGE - Agenda de Prazos"> DATAPGE - Agenda de Prazos</label>
-                                <label class="checkbox-item"><input type="checkbox" value="PROAJU"> PROAJU</label>
-                                <label class="checkbox-item"><input type="checkbox" value="SFEPGE"> SFEPGE</label>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="epro-buttons">
-                        <button id="btn-apply-epro" class="epro-btn-aplicar">
-                            <span class="material-symbols-rounded">done</span> Aplicar
-                        </button>
-                        <button id="btn-clear-epro" class="epro-btn-limpar">
-                            <span class="material-symbols-rounded">clear_all</span> Limpar
-                        </button>
-                    </div>
-
-                    <div class="output-box" id="epro-output-box">
-                        <div class="output-text" id="epro-output-text"></div>
-                        <button id="btn-copy-epro" class="btn-copy" style="margin-top: 10px;">
-                            <span class="material-symbols-rounded">content_copy</span> Copiar Texto
-                        </button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- TAB: CONVERSOR DE HORAS -->
-            <div id="tab-horas" class="tab-content">
-                <div class="content-card">
-                    <h1>Conversor de Horas</h1>
-                    <p class="tab-description">
-                        Converta entre horário normal (H:MM) e horas decimais, e vice-versa. Útil para cálculos de horas de trabalho.
-                    </p>
-
-                    <div class="hours-grid">
-                        <div class="hours-card">
-                            <div class="hours-card-header">
+                        <div class="nav-group">
+                            <span class="nav-group-label">Utilidades</span>
+                            <button class="tab-btn" data-tab="tab-horas" data-title="Conversor de Horas" data-icon="schedule">
                                 <span class="material-symbols-rounded">schedule</span>
-                                <span>Horas Normais → Decimais</span>
-                            </div>
-                            <p class="hours-hint">Digite no formato <strong>H:MM</strong> ou <strong>H:MM:SS</strong>. Ex: <strong>1:30</strong></p>
-                            <input type="text" id="horas-normal" placeholder="Ex: 1:30" inputmode="numeric">
-                            <div class="hours-result">
-                                <span class="hours-result-label">Resultado</span>
-                                <div id="horas-normal-result" class="hours-result-value">—</div>
-                                <span class="hours-result-unit">horas decimais</span>
-                            </div>
-                            <div class="hours-card-actions">
-                                <button id="btn-copy-horas-normal" class="btn-copy">
-                                    <span class="material-symbols-rounded">content_copy</span> Copiar
-                                </button>
-                                <button id="btn-clear-horas-normal" class="btn-delete" title="Limpar">
-                                    <span class="material-symbols-rounded">delete</span>
-                                </button>
-                            </div>
+                                <span class="tab-label">Conversor de Horas</span>
+                            </button>
+                            <button class="tab-btn" data-tab="tab-auditoria" data-title="Auditoria do Sistema" data-icon="history_edu">
+                                <span class="material-symbols-rounded">history_edu</span>
+                                <span class="tab-label">Auditoria</span>
+                            </button>
                         </div>
 
-                        <div class="hours-card">
-                            <div class="hours-card-header">
-                                <span class="material-symbols-rounded">numbers</span>
-                                <span>Horas Decimais → Normais</span>
+                    </div>
+                </nav>
+
+                <div class="sidebar-footer">
+                    <button id="theme-toggle" class="sidebar-action" title="Alternar tema">
+                        <span class="material-symbols-rounded" id="theme-icon">dark_mode</span>
+                        <span id="theme-text">Modo Escuro</span>
+                    </button>
+                    <button id="btn-logout" class="sidebar-action sidebar-action-danger" title="Sair da conta">
+                        <span class="material-symbols-rounded">logout</span>
+                        <span>Sair</span>
+                    </button>
+                </div>
+            </aside>
+
+            <!-- ============ COLUNA PRINCIPAL ============ -->
+            <div class="app-main">
+
+                <!-- CABECALHO / TOPBAR -->
+                <header class="app-header">
+                    <div class="header-inner">
+                        <button id="btn-sidebar-toggle" class="topbar-icon-btn" title="Recolher menu" aria-label="Recolher menu">
+                            <span class="material-symbols-rounded">menu_open</span>
+                        </button>
+
+                        <div class="topbar-heading">
+                            <div class="breadcrumb">
+                                <span class="material-symbols-rounded">home</span>
+                                <span>Sistema de Anotações</span>
                             </div>
-                            <p class="hours-hint">Digite o valor decimal usando <strong>ponto</strong> ou <strong>vírgula</strong>. Ex: <strong>1,5</strong></p>
-                            <input type="text" id="horas-decimal" placeholder="Ex: 1,5" inputmode="decimal">
-                            <div class="hours-result">
-                                <span class="hours-result-label">Resultado</span>
-                                <div id="horas-decimal-result" class="hours-result-value">—</div>
-                                <span class="hours-result-unit">horário normal (H:MM)</span>
+                            <h1 class="page-title" id="page-title">Tarefas &amp; Anotações</h1>
+                        </div>
+
+                        <div class="header-actions">
+                            <button id="btn-open-auditoria" class="btn-auditoria" title="Histórico de Auditoria">
+                                <span class="material-symbols-rounded">history_edu</span>
+                                <span class="btn-auditoria-label">Auditoria</span>
+                            </button>
+
+                            <div class="notification-area" id="bell-area" title="Tarefas no prazo">
+                                <span class="material-symbols-rounded">notifications</span>
+                                <span class="badge" id="notification-badge">0</span>
+                                <div class="notification-dropdown">
+                                    <div class="dropdown-header">Notificações</div>
+                                    <div id="dropdown-content"></div>
+                                </div>
                             </div>
-                            <div class="hours-card-actions">
-                                <button id="btn-copy-horas-decimal" class="btn-copy">
-                                    <span class="material-symbols-rounded">content_copy</span> Copiar
-                                </button>
-                                <button id="btn-clear-horas-decimal" class="btn-delete" title="Limpar">
-                                    <span class="material-symbols-rounded">delete</span>
-                                </button>
+
+                            <div class="header-user">
+                                <img id="user-avatar" class="user-avatar" src="" alt="Avatar">
+                                <span id="user-name" class="user-name"></span>
+                            </div>
+                        </div>
+                    </div>
+                </header>
+
+                <!-- CONTEUDO PRINCIPAL -->
+                <main class="main-content">
+
+                    <!-- ============ TAB: TAREFAS & ANOTACOES ============ -->
+                    <div id="tab-tarefas" class="tab-content active">
+                        <div class="workspace-grid">
+
+                            <!-- COLUNA PRINCIPAL -->
+                            <div class="workspace-col-main">
+
+                                <!-- PAINEL: TAREFAS DO DIA -->
+                                <section class="panel" id="panel-tarefas">
+                                    <header class="panel-head">
+                                        <div class="panel-title">
+                                            <span class="material-symbols-rounded">checklist</span>
+                                            <h2>Tarefas do Dia</h2>
+                                        </div>
+                                        <button id="add-task-btn" class="btn btn-primary btn-sm">
+                                            <span class="material-symbols-rounded">add</span> Nova tarefa
+                                        </button>
+                                    </header>
+                                    <div class="task-list" id="task-list"></div>
+                                    <div class="panel-foot">
+                                        <span class="panel-hint">As alterações são gravadas automaticamente.</span>
+                                    </div>
+                                </section>
+
+                                <!-- PAINEL: ANOTACOES FIXAS -->
+                                <section class="panel" id="panel-anotacoes">
+                                    <header class="panel-head">
+                                        <div class="panel-title">
+                                            <span class="material-symbols-rounded">sticky_note_2</span>
+                                            <h2>Anotações Fixas</h2>
+                                        </div>
+                                        <button class="btn btn-secondary btn-sm" id="btn-show-fixed-form">
+                                            <span class="material-symbols-rounded">add</span> Adicionar Anotação
+                                        </button>
+                                    </header>
+
+                                    <div class="fixed-notes-container">
+                                        <div class="fixed-note-form" id="fixed-note-form">
+                                            <div class="field">
+                                                <label for="new-fixed-note-title">Título <span class="field-optional">opcional</span></label>
+                                                <input type="text" id="new-fixed-note-title" placeholder="Ex: Telefones de plantão">
+                                            </div>
+                                            <div class="field">
+                                                <label for="new-fixed-note-text">Conteúdo</label>
+                                                <textarea id="new-fixed-note-text" placeholder="Digite a sua anotação…" rows="2" oninput="autoGrow(this)"></textarea>
+                                            </div>
+                                            <div class="fixed-note-form-actions">
+                                                <button id="btn-save-fixed-note" class="btn btn-primary">
+                                                    <span class="material-symbols-rounded">save</span> Salvar
+                                                </button>
+                                                <button id="btn-cancel-fixed-note" class="btn btn-ghost">
+                                                    <span class="material-symbols-rounded">close</span> Cancelar
+                                                </button>
+                                            </div>
+                                        </div>
+                                        <div class="fixed-notes-list" id="fixed-notes-list"></div>
+                                    </div>
+                                </section>
+
+                                <!-- PAINEL: TAREFAS AGENDADAS -->
+                                <section class="panel" id="panel-agendadas">
+                                    <header class="panel-head">
+                                        <div class="panel-title">
+                                            <span class="material-symbols-rounded">calendar_month</span>
+                                            <h2>Tarefas Agendadas</h2>
+                                        </div>
+                                        <button id="add-scheduled-btn" class="btn btn-secondary btn-sm">
+                                            <span class="material-symbols-rounded">add</span> Agendar tarefa
+                                        </button>
+                                    </header>
+                                    <div class="scheduled-list" id="scheduled-list"></div>
+                                </section>
+
+                            </div>
+
+                            <!-- COLUNA LATERAL -->
+                            <div class="workspace-col-side">
+
+                                <!-- PAINEL: REMOVEDOR DE CARACTERES -->
+                                <section class="panel panel-tool" id="panel-removedor">
+                                    <header class="panel-head">
+                                        <div class="panel-title">
+                                            <span class="material-symbols-rounded">filter_alt</span>
+                                            <h2>Removedor de Caracteres</h2>
+                                        </div>
+                                    </header>
+                                    <p class="panel-hint">
+                                        Remove pontos, hífens e símbolos. Útil para limpar números de processos, CPF, CNPJ etc.
+                                    </p>
+                                    <div class="field">
+                                        <label for="remover-input">Texto de entrada</label>
+                                        <textarea id="remover-input" placeholder="Cole seu texto aqui (ex: 123.456.789-00)" rows="2" oninput="autoGrow(this)"></textarea>
+                                    </div>
+                                    <div class="tool-actions">
+                                        <button id="btn-apply-remover" class="btn btn-primary btn-block">
+                                            <span class="material-symbols-rounded">filter_alt</span> Aplicar Limpeza
+                                        </button>
+                                    </div>
+                                    <div id="remover-output-box" class="output-box output-box-compact" style="display:none;">
+                                        <div class="output-label">Resultado</div>
+                                        <div id="remover-output-text" class="output-text output-text-break"></div>
+                                        <div class="tool-actions">
+                                            <button id="btn-copy-remover" class="btn btn-secondary">
+                                                <span class="material-symbols-rounded">content_copy</span> Copiar
+                                            </button>
+                                            <button id="btn-clear-remover" class="btn btn-ghost">
+                                                <span class="material-symbols-rounded">delete_sweep</span> Limpar
+                                            </button>
+                                        </div>
+                                    </div>
+                                </section>
+
                             </div>
                         </div>
                     </div>
 
-                    <div class="hours-info">
-                        <span class="material-symbols-rounded">info</span>
-                        <span>
-                            <strong>Exemplos:</strong> 90 minutos = <strong>1:30</strong> = <strong>1,50</strong> h &nbsp;·&nbsp;
-                            2 horas e 15 minutos = <strong>2:15</strong> = <strong>2,25</strong> h
-                        </span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- TAB: AUDITORIA -->
-            <div id="tab-auditoria" class="tab-content">
-                <div class="content-card">
-                    <h1>Auditoria do Sistema</h1>
-                    <p class="tab-description">
-                        Histórico completo de tudo que foi criado, alterado ou excluído no sistema —
-                        com os dados antigos e novos de cada operação.
-                    </p>
-
-                    <div class="audit-filters">
-                        <select id="audit-filter-table" aria-label="Filtrar por tabela">
-                            <option value="">Todas as tabelas</option>
-                            <option value="tasks">Tarefas do Dia</option>
-                            <option value="scheduled_tasks">Tarefas Agendadas</option>
-                            <option value="fixed_notes">Anotações Fixas</option>
-                            <option value="dispatch_templates">Modelos de Despacho</option>
-                            <option value="dispatch_history">Histórico de Despachos</option>
-                        </select>
-                        <select id="audit-filter-operation" aria-label="Filtrar por operação">
-                            <option value="">Todas as operações</option>
-                            <option value="INSERT">Criação</option>
-                            <option value="UPDATE">Alteração</option>
-                            <option value="DELETE">Exclusão</option>
-                        </select>
-                        <input type="text" id="audit-search" placeholder="Buscar no conteúdo...">
-                        <button id="btn-audit-clear" class="btn-delete btn-icon-only" title="Limpar filtros">
-                            <span class="material-symbols-rounded">filter_alt_off</span>
-                        </button>
-                        <button id="btn-audit-refresh" class="btn-copy" title="Atualizar">
-                            <span class="material-symbols-rounded">refresh</span> Atualizar
-                        </button>
-                    </div>
-
-                    <div id="audit-count" class="audit-count"></div>
-                    <div id="audit-list" class="audit-list"></div>
-                    <div id="audit-empty" class="audit-empty" style="display: none;">Carregando auditoria...</div>
-                    <div id="audit-pagination" class="audit-pagination"></div>
-                </div>
-            </div>
-
-            <!-- TAB: TERMO DE RECEBIMENTO DEFINITIVO -->
-            <div id="tab-termo" class="tab-content">
-                <div class="content-card">
-                    <h1>Termo de Recebimento Definitivo</h1>
-                    <p class="tab-description">
-                        Gere o Termo de Recebimento Definitivo do Contrato nº 6852/2025 (PGE × CELEPAR)
-                        com prévia em tempo real e exportação em PDF.
-                    </p>
-
-                    <div class="trd-toolbar">
-                        <button id="trd-btn-preview" class="epro-btn-aplicar">
-                            <span class="material-symbols-rounded">refresh</span> Atualizar Prévia
-                        </button>
-                        <button id="trd-btn-pdf" class="btn-copy">
-                            <span class="material-symbols-rounded">picture_as_pdf</span> Gerar PDF
-                        </button>
-                        <button id="trd-btn-clear" class="btn-delete">
-                            <span class="material-symbols-rounded">delete_sweep</span> Limpar Formulário
-                        </button>
-                    </div>
-
-                    <div class="trd-layout">
-                        <!-- COLUNA FORMULARIO -->
-                        <div class="trd-form">
-
-                            <div class="trd-form-section">
-                                <h3>Identificação do Contrato</h3>
-                                <div class="trd-field">
-                                    <label>Contrato</label>
-                                    <input type="text" id="trd-contrato" value="CONTRATO Nº 6852/2025" disabled>
+                    <!-- ============ TAB: E-PROTOCOLO ============ -->
+                    <div id="tab-eprotocolo" class="tab-content">
+                        <section class="panel">
+                            <header class="panel-head">
+                                <div class="panel-title">
+                                    <span class="material-symbols-rounded">gavel</span>
+                                    <h2>Gerador de Despachos</h2>
                                 </div>
-                                <div class="trd-field">
-                                    <label>Contratante</label>
-                                    <input type="text" id="trd-contratante" value="PROCURADORIA-GERAL DO ESTADO" disabled>
+                            </header>
+
+                            <div class="epro-layout">
+                                <!-- COLUNA FORMULARIO -->
+                                <div class="epro-form">
+
+                                    <div class="epro-field epro-field-full epro-category-selector">
+                                        <label for="epro-categoria">Categoria do Despacho</label>
+                                        <select id="epro-categoria">
+                                            <option value="liberacao" selected>Liberação de sistema</option>
+                                            <option value="ausencia">Ausência de informação do perfil</option>
+                                        </select>
+                                    </div>
+
+                                    <!-- Form: Liberacao -->
+                                    <div id="form-liberacao" class="epro-grid">
+                                        <div class="epro-field">
+                                            <label for="epro-mov">Número do MOV</label>
+                                            <input type="text" id="epro-mov" placeholder="Ex: 12.3">
+                                        </div>
+
+                                        <div class="epro-field">
+                                            <label for="epro-cargo">Cargo</label>
+                                            <select id="epro-cargo">
+                                                <option value="" disabled selected>Selecione um cargo…</option>
+                                                <option value="Estagiário(a)">Estagiário(a)</option>
+                                                <option value="Servidor(a)">Servidor(a)</option>
+                                                <option value="Terceirizado(a)">Terceirizado(a)</option>
+                                                <option value="Procurador(a)">Procurador(a)</option>
+                                            </select>
+                                        </div>
+
+                                        <div class="epro-field epro-field-full">
+                                            <label>Sistemas a Liberar</label>
+                                            <div class="checkbox-group" id="epro-sistemas-group">
+                                                <label class="checkbox-item"><input type="checkbox" value="E-Protocolo"> E-Protocolo</label>
+                                                <label class="checkbox-item"><input type="checkbox" value="SIPRO"> SIPRO</label>
+                                                <label class="checkbox-item"><input type="checkbox" value="PROAJU"> PROAJU</label>
+                                                <label class="checkbox-item"><input type="checkbox" value="INDSEC"> INDSEC</label>
+                                                <label class="checkbox-item"><input type="checkbox" value="SFEPGE"> SFEPGE</label>
+                                                <label class="checkbox-item"><input type="checkbox" value="DATAPGE - Agenda de Prazos"> DATAPGE - Agenda de Prazos</label>
+                                            </div>
+                                            <input type="text" id="epro-sistema-extra" class="input-flush" placeholder="Outro sistema ou informação adicional (opcional)…">
+                                        </div>
+
+                                        <div class="epro-field epro-field-full">
+                                            <label for="epro-nome">Nome do Interessado</label>
+                                            <div class="input-with-button">
+                                                <input type="text" id="epro-nome" placeholder="Digite o nome completo">
+                                                <button id="btn-format-name" class="btn btn-ghost btn-icon-only" title="Ajustar Maiúsculas/Minúsculas">
+                                                    <span class="material-symbols-rounded">text_format</span>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Form: Ausencia -->
+                                    <div id="form-ausencia" class="epro-grid" style="display:none;">
+                                        <div class="epro-field">
+                                            <label for="epro-cargo-ausencia">Cargo</label>
+                                            <select id="epro-cargo-ausencia">
+                                                <option value="" disabled selected>Selecione um cargo…</option>
+                                                <option value="Estagiário(a)">Estagiário(a)</option>
+                                                <option value="Servidor(a)">Servidor(a)</option>
+                                                <option value="Terceirizado(a)">Terceirizado(a)</option>
+                                                <option value="Procurador(a)">Procurador(a)</option>
+                                            </select>
+                                        </div>
+
+                                        <div class="epro-field epro-field-full">
+                                            <label for="epro-nome-ausencia">Nome do Interessado</label>
+                                            <div class="input-with-button">
+                                                <input type="text" id="epro-nome-ausencia" placeholder="Digite o nome completo">
+                                                <button id="btn-format-name-ausencia" class="btn btn-ghost btn-icon-only" title="Ajustar Maiúsculas/Minúsculas">
+                                                    <span class="material-symbols-rounded">text_format</span>
+                                                </button>
+                                            </div>
+                                        </div>
+
+                                        <div class="epro-field epro-field-full">
+                                            <label>Sistemas Pendentes</label>
+                                            <div class="checkbox-group" id="epro-sistemas-group-ausencia">
+                                                <label class="checkbox-item"><input type="checkbox" value="SIPRO"> SIPRO</label>
+                                                <label class="checkbox-item"><input type="checkbox" value="DATAPGE - Agenda de Prazos"> DATAPGE - Agenda de Prazos</label>
+                                                <label class="checkbox-item"><input type="checkbox" value="PROAJU"> PROAJU</label>
+                                                <label class="checkbox-item"><input type="checkbox" value="SFEPGE"> SFEPGE</label>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="epro-buttons">
+                                        <button id="btn-apply-epro" class="btn btn-primary">
+                                            <span class="material-symbols-rounded">done</span> Aplicar
+                                        </button>
+                                        <button id="btn-clear-epro" class="btn btn-ghost">
+                                            <span class="material-symbols-rounded">clear_all</span> Limpar
+                                        </button>
+                                    </div>
                                 </div>
-                                <div class="trd-field">
-                                    <label>Contratado</label>
-                                    <input type="text" id="trd-contratado" value="CELEPAR" disabled>
+
+                                <!-- COLUNA RESULTADO -->
+                                <aside class="epro-result">
+                                    <div class="panel-head panel-head-sm">
+                                        <div class="panel-title">
+                                            <span class="material-symbols-rounded">description</span>
+                                            <h3>Texto Gerado</h3>
+                                        </div>
+                                        <button id="btn-copy-epro" class="btn btn-secondary btn-sm" disabled>
+                                            <span class="material-symbols-rounded">content_copy</span> Copiar
+                                        </button>
+                                    </div>
+                                    <div class="output-box" id="epro-output-box" style="display:none;">
+                                        <div class="output-text" id="epro-output-text"></div>
+                                    </div>
+                                    <div class="epro-empty" id="epro-empty">
+                                        <span class="material-symbols-rounded">edit_note</span>
+                                        <p>Preencha os campos ao lado e clique em <strong>Aplicar</strong> para gerar o despacho.</p>
+                                    </div>
+                                </aside>
+                            </div>
+                        </section>
+                    </div>
+
+                    <!-- ============ TAB: CONVERSOR DE HORAS ============ -->
+                    <div id="tab-horas" class="tab-content">
+                        <section class="panel">
+                            <header class="panel-head">
+                                <div class="panel-title">
+                                    <span class="material-symbols-rounded">schedule</span>
+                                    <h2>Conversor de Horas</h2>
                                 </div>
-                                <div class="trd-field">
-                                    <label>Objeto do Contrato</label>
-                                    <textarea id="trd-objeto" rows="3" disabled>Soluções contínuas de Tecnologia da Informação e Comunicação (TIC), para Serviços de Telefonia Digital Celepar - TDC.</textarea>
+                            </header>
+                            <p class="panel-hint panel-hint-lead">
+                                Converta entre horário normal (H:MM) e horas decimais, e vice-versa.
+                            </p>
+
+                            <div class="hours-grid">
+                                <div class="hours-card">
+                                    <div class="hours-card-header">
+                                        <span class="material-symbols-rounded">schedule</span>
+                                        <span>Horas Normais → Decimais</span>
+                                    </div>
+                                    <p class="hours-hint">Digite no formato <strong>H:MM</strong> ou <strong>H:MM:SS</strong>. Ex: <strong>1:30</strong></p>
+                                    <input type="text" id="horas-normal" placeholder="Ex: 1:30" inputmode="numeric">
+                                    <div class="hours-result">
+                                        <span class="hours-result-label">Resultado</span>
+                                        <div id="horas-normal-result" class="hours-result-value">—</div>
+                                        <span class="hours-result-unit">horas decimais</span>
+                                    </div>
+                                    <div class="hours-card-actions">
+                                        <button id="btn-copy-horas-normal" class="btn btn-secondary">
+                                            <span class="material-symbols-rounded">content_copy</span> Copiar
+                                        </button>
+                                        <button id="btn-clear-horas-normal" class="btn btn-ghost btn-icon-only" title="Limpar">
+                                            <span class="material-symbols-rounded">delete</span>
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <div class="hours-card">
+                                    <div class="hours-card-header">
+                                        <span class="material-symbols-rounded">numbers</span>
+                                        <span>Horas Decimais → Normais</span>
+                                    </div>
+                                    <p class="hours-hint">Digite o valor decimal usando <strong>ponto</strong> ou <strong>vírgula</strong>. Ex: <strong>1,5</strong></p>
+                                    <input type="text" id="horas-decimal" placeholder="Ex: 1,5" inputmode="decimal">
+                                    <div class="hours-result">
+                                        <span class="hours-result-label">Resultado</span>
+                                        <div id="horas-decimal-result" class="hours-result-value">—</div>
+                                        <span class="hours-result-unit">horário normal (H:MM)</span>
+                                    </div>
+                                    <div class="hours-card-actions">
+                                        <button id="btn-copy-horas-decimal" class="btn btn-secondary">
+                                            <span class="material-symbols-rounded">content_copy</span> Copiar
+                                        </button>
+                                        <button id="btn-clear-horas-decimal" class="btn btn-ghost btn-icon-only" title="Limpar">
+                                            <span class="material-symbols-rounded">delete</span>
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
 
-                            <div class="trd-form-section">
-                                <h3>Dados do Recebimento</h3>
-                                <div class="trd-field">
-                                    <label>Data do Recebimento</label>
-                                    <input type="date" id="trd-data-recebimento">
+                            <div class="hours-info">
+                                <span class="material-symbols-rounded">info</span>
+                                <span>
+                                    <strong>Exemplos:</strong> 90 minutos = <strong>1:30</strong> = <strong>1,50</strong> h &nbsp;·&nbsp;
+                                    2 horas e 15 minutos = <strong>2:15</strong> = <strong>2,25</strong> h
+                                </span>
+                            </div>
+                        </section>
+                    </div>
+
+                    <!-- ============ TAB: AUDITORIA ============ -->
+                    <div id="tab-auditoria" class="tab-content">
+                        <section class="panel">
+                            <header class="panel-head">
+                                <div class="panel-title">
+                                    <span class="material-symbols-rounded">history_edu</span>
+                                    <h2>Auditoria do Sistema</h2>
                                 </div>
-                                <div class="trd-field">
-                                    <label>Período (mês/período)</label>
-                                    <input type="text" id="trd-periodo" placeholder="Ex: Julho/Agosto" value="Julho/Agosto">
+                                <div class="panel-head-actions">
+                                    <span id="audit-count" class="count-chip"></span>
+                                    <button id="btn-audit-refresh" class="btn btn-secondary btn-sm" title="Atualizar">
+                                        <span class="material-symbols-rounded">refresh</span> Atualizar
+                                    </button>
                                 </div>
-                                <div class="trd-field-row">
-                                    <div class="trd-field">
-                                        <label>Data Inicial</label>
-                                        <input type="date" id="trd-data-inicio">
-                                    </div>
-                                    <div class="trd-field">
-                                        <label>Data Final</label>
-                                        <input type="date" id="trd-data-fim">
-                                    </div>
+                            </header>
+                            <p class="panel-hint panel-hint-lead">
+                                Histórico completo de tudo que foi criado, alterado ou excluído — com os dados antigos e novos de cada operação.
+                            </p>
+
+                            <div class="audit-filters">
+                                <div class="filter-field">
+                                    <label for="audit-filter-table">Tabela</label>
+                                    <select id="audit-filter-table">
+                                        <option value="">Todas as tabelas</option>
+                                        <option value="tasks">Tarefas do Dia</option>
+                                        <option value="scheduled_tasks">Tarefas Agendadas</option>
+                                        <option value="fixed_notes">Anotações Fixas</option>
+                                        <option value="dispatch_templates">Modelos de Despacho</option>
+                                        <option value="dispatch_history">Histórico de Despachos</option>
+                                    </select>
                                 </div>
-                                <div class="trd-field">
-                                    <label>Descrição da Entrega <span class="trd-hint">(gerada automaticamente, mas editável)</span></label>
-                                    <textarea id="trd-descricao" rows="3" placeholder="Descrição automática será gerada..."></textarea>
+                                <div class="filter-field">
+                                    <label for="audit-filter-operation">Operação</label>
+                                    <select id="audit-filter-operation">
+                                        <option value="">Todas as operações</option>
+                                        <option value="INSERT">Criação</option>
+                                        <option value="UPDATE">Alteração</option>
+                                        <option value="DELETE">Exclusão</option>
+                                    </select>
                                 </div>
+                                <div class="filter-field filter-grow">
+                                    <label for="audit-search">Buscar</label>
+                                    <input type="text" id="audit-search" placeholder="Buscar no conteúdo…">
+                                </div>
+                                <button id="btn-audit-clear" class="btn btn-ghost btn-icon-only" title="Limpar filtros">
+                                    <span class="material-symbols-rounded">filter_alt_off</span>
+                                </button>
                             </div>
 
-                            <div class="trd-form-section">
-                                <div class="trd-section-head">
-                                    <h3>Itens de Volumes e Valores</h3>
-                                    <label class="checkbox-item">
-                                        <input type="checkbox" id="trd-autocalc" checked>
-                                        Calcular totais automaticamente
-                                    </label>
-                                </div>
-                                <table class="trd-edit-table" id="trd-itens-table">
+                            <div class="audit-table-wrap">
+                                <table class="audit-table">
                                     <thead>
                                         <tr>
-                                            <th>Nº</th>
-                                            <th>Descrição</th>
-                                            <th>Und.</th>
-                                            <th>Qtd</th>
-                                            <th>Valor Unit.</th>
-                                            <th>Valor Total</th>
-                                            <th></th>
+                                            <th class="col-when">Data / Hora</th>
+                                            <th class="col-op">Operação</th>
+                                            <th class="col-table">Tabela</th>
+                                            <th class="col-record">Registro</th>
+                                            <th class="col-diff">Alterações</th>
                                         </tr>
                                     </thead>
-                                    <tbody id="trd-itens-tbody"></tbody>
-                                    <tfoot>
-                                        <tr>
-                                            <td colspan="5" class="trd-total-label">TOTAL GERAL</td>
-                                            <td id="trd-total-geral" class="trd-total-value">R$ 0,00</td>
-                                            <td></td>
-                                        </tr>
-                                    </tfoot>
+                                    <tbody id="audit-list"></tbody>
                                 </table>
-                                <button id="trd-add-item" class="btn-add-field">
-                                    <span class="material-symbols-rounded">add</span> Adicionar Item
-                                </button>
-                            </div>
-
-                            <div class="trd-form-section">
-                                <div class="trd-section-head">
-                                    <h3>Medição de Resultados</h3>
-                                </div>
-                                <table class="trd-edit-table" id="trd-indicadores-table">
-                                    <thead>
-                                        <tr>
-                                            <th>Indicador</th>
-                                            <th>Resultado</th>
-                                            <th>Meta</th>
-                                            <th></th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="trd-indicadores-tbody"></tbody>
-                                </table>
-                                <button id="trd-add-indicador" class="btn-add-field">
-                                    <span class="material-symbols-rounded">add</span> Adicionar Indicador
-                                </button>
-                            </div>
-
-                            <div class="trd-form-section">
-                                <h3>Conferência e Avaliação</h3>
-                                <div class="trd-field">
-                                    <label>Texto de Conferência e Avaliação</label>
-                                    <textarea id="trd-conferencia" rows="4">Declaramos que foram conferidas a disponibilidade do serviço, os incidentes, as requisições e os valores do período de apuração, e que a(s) entrega(s) atende(m) às exigências contratuais.</textarea>
-                                </div>
-                                <div class="trd-field">
-                                    <label>Ressalvas (se houver)</label>
-                                    <textarea id="trd-ressalvas" rows="2" placeholder="Sem ressalvas.">Sem ressalvas.</textarea>
+                                <div id="audit-empty" class="empty-state" style="display:none;">
+                                    <span class="material-symbols-rounded">hourglass_empty</span>
+                                    <p>Carregando auditoria…</p>
                                 </div>
                             </div>
-
-                        </div>
-
-                        <!-- COLUNA PREVIA -->
-                        <div class="trd-preview">
-                            <div class="trd-preview-label">Prévia do Termo (A4)</div>
-                            <div class="trd-preview-sheet" id="trd-preview-sheet">
-                                <div id="trd-document" class="trd-document"></div>
-                            </div>
-                        </div>
+                            <div id="audit-pagination" class="audit-pagination"></div>
+                        </section>
                     </div>
-                </div>
-            </div>
 
-        </main>
+                    <!-- ============ TAB: TERMO DE RECEBIMENTO ============ -->
+                    <div id="tab-termo" class="tab-content">
+                        <section class="panel panel-flush">
+                            <header class="panel-head">
+                                <div class="panel-title">
+                                    <span class="material-symbols-rounded">description</span>
+                                    <h2>Termo de Recebimento Definitivo</h2>
+                                </div>
+                                <div class="panel-head-actions">
+                                    <button id="trd-btn-preview" class="btn btn-secondary btn-sm">
+                                        <span class="material-symbols-rounded">refresh</span> Atualizar Prévia
+                                    </button>
+                                    <button id="trd-btn-pdf" class="btn btn-primary btn-sm">
+                                        <span class="material-symbols-rounded">picture_as_pdf</span> Gerar PDF
+                                    </button>
+                                    <button id="trd-btn-clear" class="btn btn-ghost btn-sm">
+                                        <span class="material-symbols-rounded">delete_sweep</span> Limpar
+                                    </button>
+                                </div>
+                            </header>
+                            <p class="panel-hint panel-hint-lead">
+                                Termo de Recebimento Definitivo do Contrato nº 6852/2025 (PGE × CELEPAR) — prévia em tempo real e exportação em PDF.
+                            </p>
 
-        <!-- RODAPE -->
-        <footer class="app-footer">
-            <div class="footer-inner">
+                            <div class="trd-layout">
+                                <!-- COLUNA FORMULARIO -->
+                                <div class="trd-form">
 
-                <div class="footer-tools">
-                    <div class="tool-card">
-                        <div class="tool-card-header">
-                            <span class="material-symbols-rounded">filter_alt</span>
-                            <div>
-                                <h3>Removedor de Caracteres</h3>
-                                <p>Remove pontos, hífens e símbolos. Útil para limpar números de processos, CPF, CNPJ etc.</p>
+                                    <div class="trd-form-section">
+                                        <h3>Identificação do Contrato</h3>
+                                        <div class="trd-field">
+                                            <label>Contrato</label>
+                                            <input type="text" id="trd-contrato" value="CONTRATO Nº 6852/2025" disabled>
+                                        </div>
+                                        <div class="trd-field">
+                                            <label>Contratante</label>
+                                            <input type="text" id="trd-contratante" value="PROCURADORIA-GERAL DO ESTADO" disabled>
+                                        </div>
+                                        <div class="trd-field">
+                                            <label>Contratado</label>
+                                            <input type="text" id="trd-contratado" value="CELEPAR" disabled>
+                                        </div>
+                                        <div class="trd-field">
+                                            <label>Objeto do Contrato</label>
+                                            <textarea id="trd-objeto" rows="3" disabled>Soluções contínuas de Tecnologia da Informação e Comunicação (TIC), para Serviços de Telefonia Digital Celepar - TDC.</textarea>
+                                        </div>
+                                    </div>
+
+                                    <div class="trd-form-section">
+                                        <h3>Dados do Recebimento</h3>
+                                        <div class="trd-field">
+                                            <label for="trd-data-recebimento">Data do Recebimento</label>
+                                            <input type="date" id="trd-data-recebimento">
+                                        </div>
+                                        <div class="trd-field">
+                                            <label for="trd-periodo">Período (mês/período)</label>
+                                            <input type="text" id="trd-periodo" placeholder="Ex: Julho/Agosto" value="Julho/Agosto">
+                                        </div>
+                                        <div class="trd-field-row">
+                                            <div class="trd-field">
+                                                <label for="trd-data-inicio">Data Inicial</label>
+                                                <input type="date" id="trd-data-inicio">
+                                            </div>
+                                            <div class="trd-field">
+                                                <label for="trd-data-fim">Data Final</label>
+                                                <input type="date" id="trd-data-fim">
+                                            </div>
+                                        </div>
+                                        <div class="trd-field">
+                                            <label for="trd-descricao">Descrição da Entrega <span class="trd-hint">(gerada automaticamente, mas editável)</span></label>
+                                            <textarea id="trd-descricao" rows="3" placeholder="Descrição automática será gerada…"></textarea>
+                                        </div>
+                                    </div>
+
+                                    <div class="trd-form-section">
+                                        <div class="trd-section-head">
+                                            <h3>Itens de Volumes e Valores</h3>
+                                            <label class="checkbox-item checkbox-inline">
+                                                <input type="checkbox" id="trd-autocalc" checked>
+                                                Calcular totais automaticamente
+                                            </label>
+                                        </div>
+                                        <table class="trd-edit-table" id="trd-itens-table">
+                                            <thead>
+                                                <tr>
+                                                    <th class="col-num">Nº</th>
+                                                    <th>Descrição</th>
+                                                    <th class="col-unid">Und.</th>
+                                                    <th class="col-qtd">Qtd</th>
+                                                    <th class="col-money">Valor Unit.</th>
+                                                    <th class="col-money">Valor Total</th>
+                                                    <th class="col-act"></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="trd-itens-tbody"></tbody>
+                                            <tfoot>
+                                                <tr>
+                                                    <td colspan="5" class="trd-total-label">TOTAL GERAL</td>
+                                                    <td id="trd-total-geral" class="trd-total-value">R$ 0,00</td>
+                                                    <td></td>
+                                                </tr>
+                                            </tfoot>
+                                        </table>
+                                        <button id="trd-add-item" class="btn btn-ghost btn-sm btn-add-field">
+                                            <span class="material-symbols-rounded">add</span> Adicionar Item
+                                        </button>
+                                    </div>
+
+                                    <div class="trd-form-section">
+                                        <div class="trd-section-head">
+                                            <h3>Medição de Resultados</h3>
+                                        </div>
+                                        <table class="trd-edit-table" id="trd-indicadores-table">
+                                            <thead>
+                                                <tr>
+                                                    <th>Indicador</th>
+                                                    <th>Resultado</th>
+                                                    <th class="col-meta">Meta</th>
+                                                    <th class="col-act"></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="trd-indicadores-tbody"></tbody>
+                                        </table>
+                                        <button id="trd-add-indicador" class="btn btn-ghost btn-sm btn-add-field">
+                                            <span class="material-symbols-rounded">add</span> Adicionar Indicador
+                                        </button>
+                                    </div>
+
+                                    <div class="trd-form-section">
+                                        <h3>Conferência e Avaliação</h3>
+                                        <div class="trd-field">
+                                            <label for="trd-conferencia">Texto de Conferência e Avaliação</label>
+                                            <textarea id="trd-conferencia" rows="4">Declaramos que foram conferidas a disponibilidade do serviço, os incidentes, as requisições e os valores do período de apuração, e que a(s) entrega(s) atende(m) às exigências contratuais.</textarea>
+                                        </div>
+                                        <div class="trd-field">
+                                            <label for="trd-ressalvas">Ressalvas (se houver)</label>
+                                            <textarea id="trd-ressalvas" rows="2" placeholder="Sem ressalvas.">Sem ressalvas.</textarea>
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                                <!-- COLUNA PREVIA -->
+                                <div class="trd-preview">
+                                    <div class="trd-preview-label">
+                                        <span class="material-symbols-rounded">picture_as_pdf</span>
+                                        Prévia do Termo (A4)
+                                    </div>
+                                    <div class="trd-preview-sheet" id="trd-preview-sheet">
+                                        <div id="trd-document" class="trd-document"></div>
+                                    </div>
+                                </div>
                             </div>
-                        </div>
-                        <textarea id="remover-input" placeholder="Cole seu texto aqui (ex: 123.456.789-00)" rows="2" oninput="autoGrow(this)"></textarea>
-                        <button id="btn-apply-remover" class="btn-save" style="margin-top: 10px;">
-                            <span class="material-symbols-rounded">filter_alt</span> Aplicar Limpeza
-                        </button>
-                        <div id="remover-output-box" class="output-box" style="margin-top: 15px;">
-                            <div id="remover-output-text" class="output-text" style="word-break: break-all;"></div>
-                            <div style="display: flex; gap: 10px; margin-top: 5px;">
-                                <button id="btn-copy-remover" class="btn-copy" style="flex: 1;">
-                                    <span class="material-symbols-rounded">content_copy</span> Copiar
-                                </button>
-                                <button id="btn-clear-remover" class="btn-delete" style="flex: 1;">
-                                    <span class="material-symbols-rounded">delete</span>
-                                </button>
-                            </div>
-                        </div>
+                        </section>
                     </div>
-                </div>
 
-                <div class="footer-bar">
-                    <span class="footer-brand">Sistema de Anotações</span>
-                    <span class="footer-meta">Bruno Scrock · v1.3.0</span>
-                </div>
+                </main>
+
+                <!-- RODAPE -->
+                <footer class="app-footer">
+                    <div class="footer-bar">
+                        <span class="footer-brand">Sistema de Anotações</span>
+                        <span class="footer-meta">Bruno Scrock · v2.0.0</span>
+                    </div>
+                </footer>
+
             </div>
-        </footer>
-
+        </div>
     </div>
 
     <!-- MIGRATION MODAL -->
     <div id="migration-modal" class="modal-overlay">
         <div class="modal-content">
+            <span class="modal-icon material-symbols-rounded">cloud_sync</span>
             <h3>Dados Locais Encontrados</h3>
             <p>Encontramos dados salvos neste navegador. Deseja importar suas tarefas e anotações para sua conta?</p>
             <div class="modal-actions">
-                <button class="btn-modal-primary" onclick="window.MigrationModule.migrateLocalData()">Importar</button>
-                <button class="btn-modal-secondary" onclick="window.MigrationModule.skipMigration()">Agora não</button>
+                <button class="btn btn-primary" onclick="window.MigrationModule.migrateLocalData()">Importar</button>
+                <button class="btn btn-ghost" onclick="window.MigrationModule.skipMigration()">Agora não</button>
             </div>
         </div>
     </div>
@@ -573,10 +748,26 @@
         </div>
     </div>
 
+    <!-- CONFIRM MODAL -->
+    <div id="confirm-modal" class="modal-overlay" aria-hidden="true">
+        <div class="modal-content modal-content-sm" role="alertdialog" aria-modal="true" aria-labelledby="confirm-title">
+            <span class="modal-icon modal-icon-warning material-symbols-rounded">help</span>
+            <h3 id="confirm-title">Confirmar ação</h3>
+            <p id="confirm-message">Deseja continuar?</p>
+            <div class="modal-actions">
+                <button id="confirm-accept" class="btn btn-danger">Confirmar</button>
+                <button id="confirm-cancel" class="btn btn-ghost">Cancelar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- TOASTS -->
+    <div id="toast-container" class="toast-container" aria-live="polite" aria-atomic="true"></div>
+
     <!-- BOTAO VOLTAR AO TOPO -->
     <button id="btn-scroll-top" class="scroll-top-btn" title="Voltar ao topo" aria-label="Voltar ao topo">
         <span class="material-symbols-rounded">arrow_upward</span>
     </button>
-
+
 </body>
 </html>
