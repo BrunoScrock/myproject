@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="BS">
+  <defs>
+    <linearGradient id="favGrad" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0F766E"/>
+      <stop offset="100%" stop-color="#14B8A6"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="64" height="64" rx="14" fill="url(#favGrad)"/>
+
+  <!-- Letra unica e traxo pesado: a 16px (aba do navegador) dois caracteres viram borrao -->
+  <g fill="none" stroke="#FFFFFF" stroke-width="10" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M21 16 V48"/>
+    <path d="M21 16 H31 C38 16 38 31.5 31 31.5 H21"/>
+    <path d="M21 31.5 H32 C40 31.5 40 48 32 48 H21"/>
+  </g>
+</svg>
