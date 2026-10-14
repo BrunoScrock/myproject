@@ -6,3 +6,4 @@ dist/
 .DS_Store
 Thumbs.db
 .test-harness/
+supabase/.temp/
