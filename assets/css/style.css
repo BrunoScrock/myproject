@@ -711,18 +711,17 @@ body.sidebar-collapsed .app-shell { grid-template-columns: var(--sidebar-w-colla
     border-bottom: 1px solid rgba(255, 255, 255, 0.07);
     flex-shrink: 0;
 }
+/* O proprio SVG carrega o fundo em gradiente; aqui so o respiro e a sombra */
 .sidebar-logo {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: 34px;
-    height: 34px;
-    border-radius: var(--r-md);
-    background: linear-gradient(135deg, var(--brand), var(--brand-light));
+    width: 36px;
+    height: 36px;
     flex-shrink: 0;
-    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.35);
+    filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.4));
 }
-.sidebar-logo .brand-icon { width: 20px; height: 20px; }
+.sidebar-logo .brand-icon { width: 36px; height: 36px; display: block; border-radius: var(--r-md); }
 .brand-text { display: flex; flex-direction: column; min-width: 0; overflow: hidden; }
 .brand-title {
     font-size: var(--fs-base);
@@ -1839,7 +1838,7 @@ body.dark-mode .note-color-pink .fixed-note-title-display { color: #FAFAFA; }
 .footer-bar {
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    justify-content: flex-end;
     gap: var(--sp-4);
     max-width: 1760px;
     margin: 0 auto;

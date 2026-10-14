@@ -33,8 +33,6 @@ const ASSINATURA_2 = {
     portaria: 'Portaria nº 081/2025-PGE'
 };
 
-const ORIGINAL_TITLE = document.title;
-
 function parseNum(s) {
     s = String(s).trim().replace(/[^\d.,-]/g, '');
     if (!s) return 0;

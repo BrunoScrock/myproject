@@ -157,9 +157,21 @@ function openTab(tabId, btnElement) {
     const activeBtn = btnElement || document.querySelector(`.tab-btn[data-tab="${tabId}"]`);
     activeBtn?.classList.add('active');
 
+    // Titulo da pagina: contexto (grupo) em cima, nome da secao abaixo.
+    // Evita repetir o nome do sistema, que ja aparece na sidebar.
     const titleEl = document.getElementById('page-title');
     if (titleEl && activeBtn?.dataset.title) {
         titleEl.textContent = activeBtn.dataset.title;
+        document.title = `${activeBtn.dataset.title} · Sistema de Anotações`;
+    }
+
+    const groupEl = document.getElementById('page-group');
+    if (groupEl && activeBtn?.dataset.group) {
+        groupEl.textContent = activeBtn.dataset.group;
+    }
+    const groupIcon = document.getElementById('page-group-icon');
+    if (groupIcon && activeBtn?.dataset.groupIcon) {
+        groupIcon.textContent = activeBtn.dataset.groupIcon;
     }
 
     if (tabId === 'tab-auditoria') {
