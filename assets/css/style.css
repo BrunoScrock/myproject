@@ -1897,10 +1897,12 @@ body.dark-mode .note-color-pink .fixed-note-title-display { color: #FAFAFA; }
 }
 
 .modal-overlay {
+    position: fixed;
+    inset: 0;
     display: none;
-    align-items: center;
+    align-items: flex-start;
     justify-content: center;
-    padding: var(--sp-6);
+    padding: calc(var(--topbar-h) + var(--sp-5)) var(--sp-6) var(--sp-6);
     background: rgba(9, 9, 11, 0.55);
     backdrop-filter: blur(4px);
     -webkit-backdrop-filter: blur(4px);
@@ -1922,7 +1924,7 @@ body.dark-mode .note-color-pink .fixed-note-title-display { color: #FAFAFA; }
 }
 .modal-content-sm { max-width: 400px; }
 @keyframes modalIn {
-    from { opacity: 0; transform: translateY(14px) scale(0.96); }
+    from { opacity: 0; transform: translateY(-14px) scale(0.96); }
     to   { opacity: 1; transform: translateY(0) scale(1); }
 }
 .modal-icon {
