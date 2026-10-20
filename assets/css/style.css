@@ -1450,6 +1450,7 @@ body.dark-mode .note-color-pink .fixed-note-title-display { color: #FAFAFA; }
 }
 .output-text-break { word-break: break-all; }
 .tool-actions { display: flex; gap: var(--sp-2); }
+.panel-tool > .tool-actions { margin-top: var(--sp-4); }
 .tool-actions .btn { flex: 1; }
 
 /* ---------- 12. CONVERSOR DE HORAS ---------- */
